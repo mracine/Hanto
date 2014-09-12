@@ -11,43 +11,63 @@
 package hanto.studentmrracine.alpha;
 
 import hanto.common.HantoCoordinate;
+import hanto.common.HantoPiece;
 
-/**
- * The AlphaHantoCoordinate class implements the HantoCoordinate
- * for this version of Hanto
- * 
- * @author mrracine
- *
- */
-public class AlphaHantoCoordinate implements HantoCoordinate {
-	
+public class HantoPieceCoordinate implements HantoCoordinate {
+
 	private int x;
 	private int y;
+	private HantoPiece piece;
 	
 	/**
-	 * The constructor for an AlphaHantoCoordinate
 	 * 
-	 * @param x the x-coordinate
-	 * @param y the y-coordinate
+	 * @param x the x coordinate
+	 * @param y the y coordinate
 	 */
-	public AlphaHantoCoordinate(int x, int y){
+	public HantoPieceCoordinate(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
-
-	@Override
+	
 	/**
-	 * @return the x-coordinate
+	 * 
+	 * @param c the coordinate
+	 */
+	public HantoPieceCoordinate(HantoCoordinate c){
+		this.x = c.getX();
+		this.y = c.getY();
+	}
+	
+	/**
+	 * 
+	 * @param c the coordinate
+	 * @param h the piece at this coordinate
+	 */
+	public HantoPieceCoordinate(HantoCoordinate c, HantoPiece h){
+		this.x = c.getX();
+		this.y = c.getY();
+		this.piece = h;
+	}
+	
+	/**
+	 * @return the x coordinate
 	 */
 	public int getX() {
 		return x;
 	}
 
-	@Override
 	/**
-	 * @return the y-coordinate
+	 * @return the y coordinate
 	 */
 	public int getY() {
 		return y;
+	}
+
+	/**
+	 * 
+	 * @return the piece at this coordinate
+	 */
+	public HantoPiece getPiece() {
+		return piece;
 	}
 }

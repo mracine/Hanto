@@ -32,4 +32,25 @@ public class BetaHantoGame implements HantoGame {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+
+
+	/**
+	 * 
+	 * @param coord the coordinate of the space
+	 * @return whether the move is legal or not
+	 */
+	private boolean isLegalSpace(HantoCoordinate coord){
+		
+		// In order for the move to be valid, one of the 
+		// following spaces surrounding "coord" need to be occupied
+		// (x, y - 1)
+		// (x, y + 1)
+		// (x - 1, y)
+		// (x - 1, y + 1)
+		// (x + 1, y)
+		// (x + 1, y - 1)
+		
+		return true;
+	}
 }

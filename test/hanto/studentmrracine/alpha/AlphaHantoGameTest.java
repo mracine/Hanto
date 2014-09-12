@@ -58,69 +58,230 @@ public class AlphaHantoGameTest {
 	}
 
 	/**
-	 * Tests the board for an Alpha Hanto game
-	 * 
-	 * Since the pieces are being stored in a HashMap,
-	 * order cannot be determined when printing out the board.
-	 * Therefore, the printable board is just verified to contain
-	 * the given strings.
+	 * Tests the HantoPieceCoordinate class
 	 */
 	@Test
-	public void testBoard(){
-		Board b = new Board();
+	public void testHantoPieceCoordinate(){
+		HantoCoordinate origin = new HantoPieceCoordinate(0, 0);
+		HantoCoordinate testCoord = new HantoPieceCoordinate(origin);
+		assertEquals(0, origin.getX());
+		assertEquals(0, origin.getY());
+		assertEquals(0, testCoord.getX());
+		assertEquals(0, testCoord.getY());
 
-		// The board should be empty now
-		assertEquals("", b.getBoardString());
-
-		HantoPiece blue = new Butterfly(HantoPlayerColor.BLUE);
-		AlphaHantoCoordinate blueCoord = new AlphaHantoCoordinate(0, 0);
-		
-		// Add a piece to the board
-		try {
-			b.placePiece(blueCoord, blue);
-		} catch (HantoException e) { }
-
-		// Check that the board has a blue butterfly
-		assertTrue(b.getBoardString().contains("BLUE B at (0, 0)\n"));
-		assertEquals(HantoPieceType.BUTTERFLY, b.getPieceAt(blueCoord).getType());
+		HantoPiece blueButterfly = new Butterfly(HantoPlayerColor.BLUE);
+		HantoPieceCoordinate testCoordWithPiece = 
+				new HantoPieceCoordinate(origin, blueButterfly);
+		assertEquals(HantoPieceType.BUTTERFLY, testCoordWithPiece.getPiece().getType());
 	}
 
 	/**
-	 * Tests the coordinate class for Alpha Hanto
-	 */
-	@Test
-	public void testAlphaHantoCoordinate(){
-		HantoCoordinate a = new AlphaHantoCoordinate(4, 7);
-		assertEquals(4, a.getX());
-		assertEquals(7, a.getY());
-	}
-
-	/**
-	 * Tests an Alpha Hanto game
-	 * 
-	 * For Alpha, BLUE places his/her butterfly at (0,0). Then,
-	 * RED places his/her butterfly adjacent to BLUE's. 
-	 * The game ends in a draw.
+	 * Tests BLUE's first move of placing a BUTTERFLY
+	 * at (0, 0) and RED's move of placing a BUTTERFLY
+	 * at (0, 1)
 	 */
 	@Test
 	public void testGame(){
-		// Have BLUE add its butterfly
 		try {
-			assertEquals(MoveResult.OK, 
-					aHanto.makeMove(HantoPieceType.BUTTERFLY, null, 
-							new AlphaHantoCoordinate(0, 0)));
-		} catch (HantoException e) { }
-		
-		// Verify that the piece has been added
-		assertTrue(aHanto.getPrintableBoard().contains("BLUE B at (0, 0)\n"));
+			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 0)));
+			assertEquals("", aHanto.getPrintableBoard());
 
-		try {
-			assertEquals(MoveResult.DRAW, 
-					aHanto.makeMove(HantoPieceType.BUTTERFLY, null, 
-							new AlphaHantoCoordinate(0, 1)));
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 0)));
+
+			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
+					new HantoPieceCoordinate(0, 0)).getType());
+			assertEquals(HantoPlayerColor.BLUE, aHanto.getPieceAt(
+					new HantoPieceCoordinate(0, 0)).getColor());
+			assertEquals("BLUE B at (0, 0)\n", aHanto.getPrintableBoard());
+
+			// Place the RED BUTTERFLY
+			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 1)));
+
+			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
+					new HantoPieceCoordinate(0, 1)).getType());
+			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
+					new HantoPieceCoordinate(0, 1)).getColor());
+			assertEquals("BLUE B at (0, 0)\nRED B at (0, 1)\n", aHanto.getPrintableBoard());
+
 		} catch (HantoException e) { }
-		
-		// Verify that the piece has been added
-		assertTrue(aHanto.getPrintableBoard().contains("RED B at (0, 1)\n"));
+	}
+
+	/**
+	 * Tests RED's move of placing a butterfly at (1, 0)
+	 */
+	@Test
+	public void testGame2(){
+		try {
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 0)));
+
+			// Place the RED BUTTERFLY
+			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(1, 0)));
+
+			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
+					new HantoPieceCoordinate(1, 0)).getType());
+			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
+					new HantoPieceCoordinate(1, 0)).getColor());
+			assertEquals("BLUE B at (0, 0)\nRED B at (1, 0)\n", aHanto.getPrintableBoard());
+
+		} catch (HantoException e) { }
+	}
+
+	/**
+	 * Tests RED's move of placing a butterfly at (1, -1)
+	 */
+	@Test
+	public void testGame3(){
+		try {
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 0)));
+
+			// Place the RED BUTTERFLY
+			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(1, -1)));
+
+			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
+					new HantoPieceCoordinate(1, -1)).getType());
+			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
+					new HantoPieceCoordinate(1, -1)).getColor());
+			assertEquals("BLUE B at (0, 0)\nRED B at (1, -1)\n", aHanto.getPrintableBoard());
+
+		} catch (HantoException e) { }
+	}
+
+	/**
+	 * Tests RED's move of placing a butterfly at (0, -1)
+	 */
+	@Test
+	public void testGame4(){
+		try {
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 0)));
+
+			// Place the RED BUTTERFLY
+			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, -1)));
+
+			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
+					new HantoPieceCoordinate(0, -1)).getType());
+			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
+					new HantoPieceCoordinate(0, -1)).getColor());
+			assertEquals("BLUE B at (0, 0)\nRED B at (0, -1)\n", aHanto.getPrintableBoard());
+
+		} catch (HantoException e) { }
+	}
+
+	/**
+	 * Tests RED's move of placing a butterfly at (0, -1)
+	 */
+	@Test
+	public void testGame5(){
+		try {
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 0)));
+
+			// Place the RED BUTTERFLY
+			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, -1)));
+
+			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
+					new HantoPieceCoordinate(0, -1)).getType());
+			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
+					new HantoPieceCoordinate(0, -1)).getColor());
+			assertEquals("BLUE B at (0, 0)\nRED B at (0, -1)\n", aHanto.getPrintableBoard());
+
+		} catch (HantoException e) { }
+	}
+
+	/**
+	 * Tests RED's move of placing a butterfly at (-1, 0)
+	 */
+	@Test
+	public void testGame6(){
+		try {
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 0)));
+
+			// Place the RED BUTTERFLY
+			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(-1, 0)));
+
+			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
+					new HantoPieceCoordinate(-1, 0)).getType());
+			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
+					new HantoPieceCoordinate(-1, 0)).getColor());
+			assertEquals("BLUE B at (0, 0)\nRED B at (-1, 0)\n", aHanto.getPrintableBoard());
+
+		} catch (HantoException e) { }
+	}
+
+	/**
+	 * Tests RED's move of placing a butterfly at (-1, 1)
+	 */
+	@Test
+	public void testGame7(){
+		try {
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 0)));
+
+			// Place the RED BUTTERFLY
+			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(-1, 1)));
+
+			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
+					new HantoPieceCoordinate(-1, 1)).getType());
+			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
+					new HantoPieceCoordinate(-1, 1)).getColor());
+			assertEquals("BLUE B at (0, 0)\nRED B at (-1, 1)\n", aHanto.getPrintableBoard());
+
+		} catch (HantoException e) { }
+	}
+
+	/**
+	 * Tests an invalid RED move
+	 */
+	@Test
+	public void testRedInvalid(){
+		try {
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 0)));
+
+			// Place the RED BUTTERFLY
+			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 2)));
+		} catch (HantoException e) { 
+			assertEquals("Red move is invalid", e.getMessage());
+			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 2)));
+			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 2)));
+			assertEquals("BLUE B at (0, 0)\n", aHanto.getPrintableBoard());
+		}
+	}
+	
+	/**
+	 * Tests an invalid BLUE move
+	 */
+	@Test
+	public void testBlueInvalid(){
+		try {
+			// Place the BLUE BUTTERFLY
+			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
+					null, new HantoPieceCoordinate(0, 1)));
+		} catch (HantoException e) {
+			assertEquals("Blue move is invalid", e.getMessage());
+			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 1)));
+			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 1)));
+			assertEquals("", aHanto.getPrintableBoard());
+		}
 	}
 }

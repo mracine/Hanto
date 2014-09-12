@@ -11,6 +11,9 @@
 package hanto.studentmrracine.beta;
 
 import static org.junit.Assert.*;
+import hanto.common.HantoPiece;
+import hanto.common.HantoPieceType;
+import hanto.common.HantoPlayerColor;
 
 import org.junit.Test;
 
@@ -20,5 +23,22 @@ public class BetaHantoGameTest {
 	public void test() {
 		fail("Not yet implemented");
 	}
-
+	
+	/**
+	 * Test the sparrow enumeration
+	 */
+	public void testSparrowEnum(){
+		assertEquals("Sparrow", HantoPieceType.SPARROW.getPrintableName());
+		assertEquals("Sparrow", HantoPieceType.SPARROW.toString());
+		assertEquals("S", HantoPieceType.SPARROW.getSymbol());
+	}
+	
+	/**
+	 * Test the sparrow class
+	 */
+	public void testSparrowClass(){
+		HantoPiece s = new Sparrow(HantoPlayerColor.BLUE);
+		assertEquals(HantoPlayerColor.BLUE, s.getColor());
+		assertEquals(HantoPieceType.SPARROW, s.getType());
+	}
 }
