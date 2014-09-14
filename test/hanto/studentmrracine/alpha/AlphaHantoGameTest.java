@@ -107,7 +107,9 @@ public class AlphaHantoGameTest {
 					new AlphaCoordinate(0, 1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (0, 1)\n", aHanto.getPrintableBoard());
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -130,7 +132,9 @@ public class AlphaHantoGameTest {
 					new AlphaCoordinate(1, 0)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (1, 0)\n", aHanto.getPrintableBoard());
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -153,7 +157,9 @@ public class AlphaHantoGameTest {
 					new AlphaCoordinate(1, -1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (1, -1)\n", aHanto.getPrintableBoard());
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -176,7 +182,9 @@ public class AlphaHantoGameTest {
 					new AlphaCoordinate(0, -1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (0, -1)\n", aHanto.getPrintableBoard());
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -199,7 +207,9 @@ public class AlphaHantoGameTest {
 					new AlphaCoordinate(0, -1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (0, -1)\n", aHanto.getPrintableBoard());
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -222,7 +232,9 @@ public class AlphaHantoGameTest {
 					new AlphaCoordinate(-1, 0)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (-1, 0)\n", aHanto.getPrintableBoard());
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -245,7 +257,9 @@ public class AlphaHantoGameTest {
 					new AlphaCoordinate(-1, 1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (-1, 1)\n", aHanto.getPrintableBoard());
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**

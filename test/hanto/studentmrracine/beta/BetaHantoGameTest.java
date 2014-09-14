@@ -25,6 +25,11 @@ import hanto.studentmrracine.common.Sparrow;
 
 import org.junit.Test;
 
+/**
+ * Test class for a BetaHantoGame
+ * @author mrracine
+ *
+ */
 public class BetaHantoGameTest {
 
 	private HantoGame bHanto = HantoGameFactory.getInstance().makeHantoGame(
@@ -129,7 +134,9 @@ public class BetaHantoGameTest {
 			// RED places SPARROW at (-2, 2)
 			assertEquals(MoveResult.DRAW,
 					bHanto.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-2, 2)));
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -272,7 +279,9 @@ public class BetaHantoGameTest {
 			assertEquals(MoveResult.BLUE_WINS,
 					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(-1, 1)));
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -312,7 +321,9 @@ public class BetaHantoGameTest {
 			assertEquals(MoveResult.RED_WINS,
 					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-1, 1)));
 
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -385,7 +396,9 @@ public class BetaHantoGameTest {
 			assertEquals(HantoPieceType.SPARROW, testB.getPieceAt(new BetaCoordinate(0, 1)).getType());
 			assertEquals(HantoPlayerColor.RED, testB.getPieceAt(new BetaCoordinate(0, 1)).getColor());
 			
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -418,7 +431,9 @@ public class BetaHantoGameTest {
 					+ "RED S at (0, 1)\n"
 					+ "BLUE S at (0, 2)\n", testB.getPrintableBoard());
 			
-		} catch (HantoException e) { }
+		} catch (HantoException e) { 
+			e.printStackTrace();
+		}
 	}
 	
 	/**
