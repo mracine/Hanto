@@ -20,6 +20,7 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
+import hanto.studentmrracine.common.Butterfly;
 
 import org.junit.Test;
 
@@ -62,16 +63,16 @@ public class AlphaHantoGameTest {
 	 */
 	@Test
 	public void testHantoPieceCoordinate(){
-		HantoCoordinate origin = new HantoPieceCoordinate(0, 0);
-		HantoCoordinate testCoord = new HantoPieceCoordinate(origin);
+		HantoCoordinate origin = new AlphaCoordinate(0, 0);
+		HantoCoordinate testCoord = new AlphaCoordinate(origin);
 		assertEquals(0, origin.getX());
 		assertEquals(0, origin.getY());
 		assertEquals(0, testCoord.getX());
 		assertEquals(0, testCoord.getY());
 
 		HantoPiece blueButterfly = new Butterfly(HantoPlayerColor.BLUE);
-		HantoPieceCoordinate testCoordWithPiece = 
-				new HantoPieceCoordinate(origin, blueButterfly);
+		AlphaCoordinate testCoordWithPiece = 
+				new AlphaCoordinate(origin, blueButterfly);
 		assertEquals(HantoPieceType.BUTTERFLY, testCoordWithPiece.getPiece().getType());
 	}
 
@@ -83,27 +84,27 @@ public class AlphaHantoGameTest {
 	@Test
 	public void testGame(){
 		try {
-			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 0)));
+			assertEquals(null, aHanto.getPieceAt(new AlphaCoordinate(0, 0)));
 			assertEquals("", aHanto.getPrintableBoard());
 
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 0)));
+					null, new AlphaCoordinate(0, 0)));
 
 			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
-					new HantoPieceCoordinate(0, 0)).getType());
+					new AlphaCoordinate(0, 0)).getType());
 			assertEquals(HantoPlayerColor.BLUE, aHanto.getPieceAt(
-					new HantoPieceCoordinate(0, 0)).getColor());
+					new AlphaCoordinate(0, 0)).getColor());
 			assertEquals("BLUE B at (0, 0)\n", aHanto.getPrintableBoard());
 
 			// Place the RED BUTTERFLY
 			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 1)));
+					null, new AlphaCoordinate(0, 1)));
 
 			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
-					new HantoPieceCoordinate(0, 1)).getType());
+					new AlphaCoordinate(0, 1)).getType());
 			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
-					new HantoPieceCoordinate(0, 1)).getColor());
+					new AlphaCoordinate(0, 1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (0, 1)\n", aHanto.getPrintableBoard());
 
 		} catch (HantoException e) { }
@@ -117,16 +118,16 @@ public class AlphaHantoGameTest {
 		try {
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 0)));
+					null, new AlphaCoordinate(0, 0)));
 
 			// Place the RED BUTTERFLY
 			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(1, 0)));
+					null, new AlphaCoordinate(1, 0)));
 
 			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
-					new HantoPieceCoordinate(1, 0)).getType());
+					new AlphaCoordinate(1, 0)).getType());
 			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
-					new HantoPieceCoordinate(1, 0)).getColor());
+					new AlphaCoordinate(1, 0)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (1, 0)\n", aHanto.getPrintableBoard());
 
 		} catch (HantoException e) { }
@@ -140,16 +141,16 @@ public class AlphaHantoGameTest {
 		try {
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 0)));
+					null, new AlphaCoordinate(0, 0)));
 
 			// Place the RED BUTTERFLY
 			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(1, -1)));
+					null, new AlphaCoordinate(1, -1)));
 
 			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
-					new HantoPieceCoordinate(1, -1)).getType());
+					new AlphaCoordinate(1, -1)).getType());
 			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
-					new HantoPieceCoordinate(1, -1)).getColor());
+					new AlphaCoordinate(1, -1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (1, -1)\n", aHanto.getPrintableBoard());
 
 		} catch (HantoException e) { }
@@ -163,16 +164,16 @@ public class AlphaHantoGameTest {
 		try {
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 0)));
+					null, new AlphaCoordinate(0, 0)));
 
 			// Place the RED BUTTERFLY
 			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, -1)));
+					null, new AlphaCoordinate(0, -1)));
 
 			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
-					new HantoPieceCoordinate(0, -1)).getType());
+					new AlphaCoordinate(0, -1)).getType());
 			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
-					new HantoPieceCoordinate(0, -1)).getColor());
+					new AlphaCoordinate(0, -1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (0, -1)\n", aHanto.getPrintableBoard());
 
 		} catch (HantoException e) { }
@@ -186,16 +187,16 @@ public class AlphaHantoGameTest {
 		try {
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 0)));
+					null, new AlphaCoordinate(0, 0)));
 
 			// Place the RED BUTTERFLY
 			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, -1)));
+					null, new AlphaCoordinate(0, -1)));
 
 			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
-					new HantoPieceCoordinate(0, -1)).getType());
+					new AlphaCoordinate(0, -1)).getType());
 			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
-					new HantoPieceCoordinate(0, -1)).getColor());
+					new AlphaCoordinate(0, -1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (0, -1)\n", aHanto.getPrintableBoard());
 
 		} catch (HantoException e) { }
@@ -209,16 +210,16 @@ public class AlphaHantoGameTest {
 		try {
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 0)));
+					null, new AlphaCoordinate(0, 0)));
 
 			// Place the RED BUTTERFLY
 			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(-1, 0)));
+					null, new AlphaCoordinate(-1, 0)));
 
 			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
-					new HantoPieceCoordinate(-1, 0)).getType());
+					new AlphaCoordinate(-1, 0)).getType());
 			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
-					new HantoPieceCoordinate(-1, 0)).getColor());
+					new AlphaCoordinate(-1, 0)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (-1, 0)\n", aHanto.getPrintableBoard());
 
 		} catch (HantoException e) { }
@@ -232,16 +233,16 @@ public class AlphaHantoGameTest {
 		try {
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 0)));
+					null, new AlphaCoordinate(0, 0)));
 
 			// Place the RED BUTTERFLY
 			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(-1, 1)));
+					null, new AlphaCoordinate(-1, 1)));
 
 			assertEquals(HantoPieceType.BUTTERFLY, aHanto.getPieceAt(
-					new HantoPieceCoordinate(-1, 1)).getType());
+					new AlphaCoordinate(-1, 1)).getType());
 			assertEquals(HantoPlayerColor.RED, aHanto.getPieceAt(
-					new HantoPieceCoordinate(-1, 1)).getColor());
+					new AlphaCoordinate(-1, 1)).getColor());
 			assertEquals("BLUE B at (0, 0)\nRED B at (-1, 1)\n", aHanto.getPrintableBoard());
 
 		} catch (HantoException e) { }
@@ -255,15 +256,15 @@ public class AlphaHantoGameTest {
 		try {
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 0)));
+					null, new AlphaCoordinate(0, 0)));
 
 			// Place the RED BUTTERFLY
 			assertEquals(MoveResult.DRAW, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 2)));
+					null, new AlphaCoordinate(0, 2)));
 		} catch (HantoException e) { 
 			assertEquals("Red move is invalid", e.getMessage());
-			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 2)));
-			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 2)));
+			assertEquals(null, aHanto.getPieceAt(new AlphaCoordinate(0, 2)));
+			assertEquals(null, aHanto.getPieceAt(new AlphaCoordinate(0, 2)));
 			assertEquals("BLUE B at (0, 0)\n", aHanto.getPrintableBoard());
 		}
 	}
@@ -276,11 +277,11 @@ public class AlphaHantoGameTest {
 		try {
 			// Place the BLUE BUTTERFLY
 			assertEquals(MoveResult.OK, aHanto.makeMove(HantoPieceType.BUTTERFLY, 
-					null, new HantoPieceCoordinate(0, 1)));
+					null, new AlphaCoordinate(0, 1)));
 		} catch (HantoException e) {
 			assertEquals("Blue move is invalid", e.getMessage());
-			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 1)));
-			assertEquals(null, aHanto.getPieceAt(new HantoPieceCoordinate(0, 1)));
+			assertEquals(null, aHanto.getPieceAt(new AlphaCoordinate(0, 1)));
+			assertEquals(null, aHanto.getPieceAt(new AlphaCoordinate(0, 1)));
 			assertEquals("", aHanto.getPrintableBoard());
 		}
 	}

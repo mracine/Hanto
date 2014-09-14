@@ -17,6 +17,7 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
+import hanto.studentmrracine.common.Butterfly;
 
 /**
  * The AlphaHantoGame implements the HantoGame interface
@@ -27,8 +28,8 @@ import hanto.common.MoveResult;
  */
 public class AlphaHantoGame implements HantoGame {
 
-	private HantoPieceCoordinate blueButterfly;
-	private HantoPieceCoordinate redButterfly;
+	private AlphaCoordinate blueButterfly;
+	private AlphaCoordinate redButterfly;
 
 	/**
 	 * Keeps track of the current player's turn
@@ -56,7 +57,7 @@ public class AlphaHantoGame implements HantoGame {
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
 		MoveResult result; // The result of the move
-		HantoPieceCoordinate newCoord = new HantoPieceCoordinate(to, 
+		AlphaCoordinate newCoord = new AlphaCoordinate(to, 
 				new Butterfly(currentPlayerTurn)); // The new butterfly
 
 		if(currentPlayerTurn == HantoPlayerColor.BLUE){

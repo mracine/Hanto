@@ -13,7 +13,17 @@ package hanto.studentmrracine.alpha;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoPiece;
 
-public class HantoPieceCoordinate implements HantoCoordinate {
+/**
+ * The implementation of HantoCoordinate for an Alpha Hanto Game
+ * 
+ * Note: This implementation contains references to HantoPieces
+ * Since the coordinate is a tile on the board, there piece can
+ * be referenced from the coordinate. If no piece is there, the piece
+ * should be null
+ * @author mrracine
+ *
+ */
+public class AlphaCoordinate implements HantoCoordinate {
 
 	private int x;
 	private int y;
@@ -24,7 +34,7 @@ public class HantoPieceCoordinate implements HantoCoordinate {
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 */
-	public HantoPieceCoordinate(int x, int y){
+	public AlphaCoordinate(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
@@ -33,9 +43,9 @@ public class HantoPieceCoordinate implements HantoCoordinate {
 	 * 
 	 * @param c the coordinate
 	 */
-	public HantoPieceCoordinate(HantoCoordinate c){
-		this.x = c.getX();
-		this.y = c.getY();
+	public AlphaCoordinate(HantoCoordinate c){
+		x = c.getX();
+		y = c.getY();
 	}
 	
 	/**
@@ -43,10 +53,10 @@ public class HantoPieceCoordinate implements HantoCoordinate {
 	 * @param c the coordinate
 	 * @param h the piece at this coordinate
 	 */
-	public HantoPieceCoordinate(HantoCoordinate c, HantoPiece h){
-		this.x = c.getX();
-		this.y = c.getY();
-		this.piece = h;
+	public AlphaCoordinate(HantoCoordinate c, HantoPiece h){
+		x = c.getX();
+		y = c.getY();
+		piece = h;
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package hanto.studentmrracine.beta;
+package hanto.studentmrracine.common;
 
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
