@@ -60,6 +60,12 @@ public class AlphaHantoGame implements HantoGame {
 		AlphaCoordinate newCoord = new AlphaCoordinate(to, 
 				new Butterfly(currentPlayerTurn)); // The new butterfly
 
+		if(pieceType != HantoPieceType.BUTTERFLY){
+			throw new HantoException("Can only place butterflies in Alpha Hanto");
+		} else if(from != null){
+			throw new HantoException("Cannot move in Alpha Hanto");
+		}
+		
 		if(currentPlayerTurn == HantoPlayerColor.BLUE){
 
 			// Place the piece at (0, 0)

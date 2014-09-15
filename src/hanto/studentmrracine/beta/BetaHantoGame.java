@@ -112,6 +112,8 @@ public class BetaHantoGame implements HantoGame {
 					throw new HantoException("Red butterfly must be placed");
 				}
 			}
+		} else if (from != null){
+			throw new HantoException("Cannot move in Beta Hanto");
 		} else if(!isLegalMove(to)){
 			throw new HantoException("Move is invalid");
 		}

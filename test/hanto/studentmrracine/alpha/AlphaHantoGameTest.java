@@ -282,7 +282,7 @@ public class AlphaHantoGameTest {
 			assertEquals("BLUE B at (0, 0)\n", aHanto.getPrintableBoard());
 		}
 	}
-	
+
 	/**
 	 * Tests an invalid BLUE move
 	 */
@@ -298,5 +298,96 @@ public class AlphaHantoGameTest {
 			assertEquals(null, aHanto.getPieceAt(new AlphaCoordinate(0, 1)));
 			assertEquals("", aHanto.getPrintableBoard());
 		}
+	}
+
+	/**
+	 * Tests the creation of an AlphaHantoGame
+	 */
+	@Test
+	public void getAnAlphaHantoGameFromTheFactory() {
+		assertTrue(aHanto instanceof AlphaHantoGame);
+	}
+
+	/**
+	 * Tests a valid BLUE first move
+	 * @throws HantoException
+	 */
+	@Test
+	public void blueMakesValidFirstMove() throws HantoException {
+		final MoveResult mr = aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(0, 0));
+		assertEquals(MoveResult.OK, mr);
+	}
+
+	/**
+	 * Tests that the BUTTERFLY is at (0, 0) after the first move
+	 * @throws HantoException
+	 */
+	@Test
+	public void afterFirstMoveBlueButterflyIsAt0_0() throws HantoException {
+		aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(0, 0));
+		final HantoPiece p = aHanto.getPieceAt(new AlphaCoordinate(0, 0));
+		assertEquals(HantoPieceType.BUTTERFLY, p.getType());
+		assertEquals(HantoPlayerColor.BLUE, p.getColor());
+	}
+
+	/**
+	 * Tests that BLUE cannot place a non BUTTERFLY piece
+	 * @throws HantoException
+	 */
+	@Test(expected=HantoException.class)
+	public void bluePlacesNonButterfly() throws HantoException {
+		aHanto.makeMove(HantoPieceType.SPARROW, null, new AlphaCoordinate(0, 0));
+	}
+
+	/**
+	 * Tests that RED places a BUTTERFLY next to BLUE's
+	 * @throws HantoException
+	 */
+	@Test
+	public void redPlacesButterflyNextToBlueButterfly() throws HantoException {
+		aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(0, 0));
+		aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(0, 1));
+		final HantoPiece p = aHanto.getPieceAt(new AlphaCoordinate(0, 1));
+		assertEquals(HantoPieceType.BUTTERFLY, p.getType());
+		assertEquals(HantoPlayerColor.RED, p.getColor());
+	}
+
+	/**
+	 * Tests that BLUE cannot place a BUTTERFLY anywhere but (0, 0)
+	 * @throws HantoException
+	 */
+	@Test(expected=HantoException.class)
+	public void blueAttemptsToPlaceButterflyAtWrongLocation() throws HantoException {
+		aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(-1, 1));
+	}
+
+	/**
+	 * Tests that RED makes a valid second move
+	 * @throws HantoException
+	 */
+	@Test
+	public void redMakesValidSecondMoveAndGameIsDrawn() throws HantoException {
+		aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(0, 0));
+		final MoveResult mr = aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(-1, 1));
+		assertEquals(MoveResult.DRAW, mr);
+	}
+
+	/**
+	 * Tests that RED cannot place a piece non-adjacent to BLUE's
+	 * @throws HantoException
+	 */
+	@Test(expected=HantoException.class)
+	public void redPlacesButterflyNonAdjacentToBlueButterfly() throws HantoException {
+		aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(0, 0));
+		aHanto.makeMove(HantoPieceType.BUTTERFLY, null, new AlphaCoordinate(0, 2));
+	}
+
+	/**
+	 * Tests that a player cannot move his/her piece rather than place it
+	 * @throws HantoException
+	 */
+	@Test(expected=HantoException.class)
+	public void attemptToMoveRatherThanPlace() throws HantoException {
+		aHanto.makeMove(HantoPieceType.BUTTERFLY, new AlphaCoordinate(0, 1), new AlphaCoordinate(0, 0));
 	}
 }
