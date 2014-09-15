@@ -11,9 +11,7 @@
 package hanto.studentmrracine.beta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
@@ -41,11 +39,10 @@ import hanto.studentmrracine.common.Sparrow;
 public class BetaHantoGame implements HantoGame {
 
 	/**
-	 * A 2D HashMap of HantoCoordinates and their corresponding pieces
+	 * The class that holds coordinates
 	 */
-	private Map<Integer, Map<Integer, BetaCoordinate>> board = 
-			new HashMap<Integer, Map<Integer, BetaCoordinate>>();
-	
+	Board board = new Board();
+
 	/**
 	 * A list of all coordinates on the board
 	 * Used for quicker access when printing the board
@@ -95,19 +92,19 @@ public class BetaHantoGame implements HantoGame {
 		// Else, make sure that the player has placed the butterfly
 		// Else, throw an exception if the move is not legal
 		if (turnNumber == 1 && currentPlayerTurn == movesFirst){
-			
+
 			if(!firstMoveValid(to)){
 				throw new HantoException("First move is invalid");
 			}
 		} else if (turnNumber == 4){
-			
+
 			if(currentPlayerTurn == HantoPlayerColor.BLUE){
-				
+
 				if(blueButterfly == null && pieceType != HantoPieceType.BUTTERFLY){
 					throw new HantoException("Blue butterfly must be placed");
 				}
 			} else if(currentPlayerTurn == HantoPlayerColor.RED){
-				
+
 				if(redButterfly == null && pieceType != HantoPieceType.BUTTERFLY){
 					throw new HantoException("Red butterfly must be placed");
 				}
@@ -120,7 +117,7 @@ public class BetaHantoGame implements HantoGame {
 
 		// Make the move depending on the player color
 		if(currentPlayerTurn == HantoPlayerColor.BLUE){
-			
+
 			if(pieceType == HantoPieceType.BUTTERFLY){
 				blueButterfly = new BetaCoordinate(to.getX(), to.getY());
 			}
@@ -131,9 +128,9 @@ public class BetaHantoGame implements HantoGame {
 				redButterfly = new BetaCoordinate(to.getX(), to.getY());
 			}
 		}
-		
+
 		HantoPiece newPiece = null;
-		
+
 		// Create a new piece to be stored at this coordinate
 		if(pieceType == HantoPieceType.BUTTERFLY){
 			newPiece = new Butterfly(currentPlayerTurn);
@@ -142,23 +139,18 @@ public class BetaHantoGame implements HantoGame {
 		} else {
 			throw new HantoException("Invalid piece type");
 		}
-		
+
 		// Create a new BetaCoordinate based on the HantoCoordinate
 		BetaCoordinate newCoord = new BetaCoordinate(to, newPiece);
-		
+
 		// Add this coordinate to the board's list
 		allCoordinates.add(newCoord);
-		
-		// Add the coordinate to the board hashmap
-		if(!board.containsKey(to.getX())){
-			Map<Integer, BetaCoordinate> temp = new HashMap<Integer, BetaCoordinate>();
-			temp.put(newCoord.getY(), newCoord);
-			board.put(newCoord.getX(), temp);
-		} else {
-			board.get(newCoord.getX()).put(newCoord.getY(), newCoord);
-		}
 
-		switchTurn(); // Switch the current player's turn
+		// Add the coordinate to the board hashmap
+		board.addPiece(newCoord);
+
+		// Switch the current player's turn
+		switchTurn();
 
 		// Checks the result to return
 		if(isBlueWin() && isRedWin()){
@@ -177,22 +169,11 @@ public class BetaHantoGame implements HantoGame {
 	}
 
 	public HantoPiece getPieceAt(HantoCoordinate where) {
-
-		HantoPiece piece;
-		
-		if(board.containsKey(where.getX()) && 
-			board.get(where.getX()).containsKey(where.getY())){
-			
-			piece = board.get(where.getX()).get(where.getY()).getPiece();
-		} else {
-			piece = null;
-		}
-		
-		return piece;
+		return board.getPieceAt(where);
 	}
 
 	public String getPrintableBoard() {
-		
+
 		String formattedBoard = "";
 
 		for(BetaCoordinate b : allCoordinates){
@@ -204,7 +185,7 @@ public class BetaHantoGame implements HantoGame {
 			formattedBoard += b.getY() + ")";
 			formattedBoard += "\n";
 		}
-		
+
 		return formattedBoard;
 	}
 
@@ -234,21 +215,14 @@ public class BetaHantoGame implements HantoGame {
 		// Else, if one of the surrounding hexagons contains a piece,
 		// the move is valid
 		// Else, the move is invalid
-		if(board.containsKey(coord.getX()) && 
-				board.get(coord.getX()).containsKey(coord.getY())){
+		if(board.hasCoordinate(coord)){
 			isLegal = false;
-		} else if((board.containsKey(coord.getX()) && 
-				board.get(coord.getX()).containsKey(coord.getY() - 1)) || 
-				(board.containsKey(coord.getX()) && 
-						board.get(coord.getX()).containsKey(coord.getY() + 1)) || 
-						(board.containsKey(coord.getX() - 1) && 
-								board.get(coord.getX() - 1).containsKey(coord.getY())) || 
-								(board.containsKey(coord.getX() - 1) && 
-										board.get(coord.getX() - 1).containsKey(coord.getY() + 1)) || 
-										(board.containsKey(coord.getX() + 1) && 
-												board.get(coord.getX() + 1).containsKey(coord.getY())) || 
-												(board.containsKey(coord.getX() + 1) && 
-														board.get(coord.getX() + 1).containsKey(coord.getY() - 1))){
+		} else if((board.hasCoordinate(coord.getX(), coord.getY() - 1)) || 
+				(board.hasCoordinate(coord.getX(), coord.getY() + 1)) || 
+				(board.hasCoordinate(coord.getX() - 1, coord.getY())) || 
+				(board.hasCoordinate(coord.getX() - 1, coord.getY() + 1)) || 
+				(board.hasCoordinate(coord.getX() + 1, coord.getY())) || 
+				(board.hasCoordinate(coord.getX() + 1, coord.getY() - 1))){
 			isLegal = true;
 		} else {
 			isLegal = false;
@@ -278,8 +252,10 @@ public class BetaHantoGame implements HantoGame {
 	/**
 	 * Checks whether the resulting move is a win condition
 	 * for BLUE by checking the RED BUTTERFLY
+	 * 
+	 * @return whether or not blue has won
 	 */
-	private boolean isBlueWin(){
+	public boolean isBlueWin(){
 
 		boolean isWin;
 
@@ -288,18 +264,12 @@ public class BetaHantoGame implements HantoGame {
 
 		if(redButterfly == null){
 			isWin = false;
-		} else if((board.containsKey(redButterfly.getX()) && 
-				board.get(redButterfly.getX()).containsKey(redButterfly.getY() - 1)) && 
-				(board.containsKey(redButterfly.getX()) && 
-						board.get(redButterfly.getX()).containsKey(redButterfly.getY() + 1)) && 
-						(board.containsKey(redButterfly.getX() - 1) && 
-								board.get(redButterfly.getX() - 1).containsKey(redButterfly.getY())) && 
-								(board.containsKey(redButterfly.getX() - 1) && 
-										board.get(redButterfly.getX() - 1).containsKey(redButterfly.getY() + 1)) && 
-										(board.containsKey(redButterfly.getX() + 1) && 
-												board.get(redButterfly.getX() + 1).containsKey(redButterfly.getY())) && 
-												(board.containsKey(redButterfly.getX() + 1) && 
-														board.get(redButterfly.getX() + 1).containsKey(redButterfly.getY() - 1))){
+		} else if((board.hasCoordinate(redButterfly.getX(), redButterfly.getY() - 1)) && 
+				(board.hasCoordinate(redButterfly.getX(), redButterfly.getY() + 1)) && 
+				(board.hasCoordinate(redButterfly.getX() - 1, redButterfly.getY())) && 
+				(board.hasCoordinate(redButterfly.getX() - 1, redButterfly.getY() + 1)) && 
+				(board.hasCoordinate(redButterfly.getX() + 1, redButterfly.getY())) && 
+				(board.hasCoordinate(redButterfly.getX() + 1, redButterfly.getY() - 1))){
 			isWin = true;
 		} else {
 			isWin = false;
@@ -311,25 +281,21 @@ public class BetaHantoGame implements HantoGame {
 	/**
 	 * Checks whether the resulting move is a win condition
 	 * for RED by checking the BLUE BUTTERFLY
+	 * 
+	 * @return whether or not red has won
 	 */
-	private boolean isRedWin(){
+	public boolean isRedWin(){
 
 		boolean isWin;
 
 		if(blueButterfly == null){
 			isWin = false;
-		} else if((board.containsKey(blueButterfly.getX()) && 
-				board.get(blueButterfly.getX()).containsKey(blueButterfly.getY() - 1)) && 
-				(board.containsKey(blueButterfly.getX()) && 
-						board.get(blueButterfly.getX()).containsKey(blueButterfly.getY() + 1)) && 
-						(board.containsKey(blueButterfly.getX() - 1) && 
-								board.get(blueButterfly.getX() - 1).containsKey(blueButterfly.getY())) && 
-								(board.containsKey(blueButterfly.getX() - 1) && 
-										board.get(blueButterfly.getX() - 1).containsKey(blueButterfly.getY() + 1)) && 
-										(board.containsKey(blueButterfly.getX() + 1) && 
-												board.get(blueButterfly.getX() + 1).containsKey(blueButterfly.getY())) && 
-												(board.containsKey(blueButterfly.getX() + 1) && 
-														board.get(blueButterfly.getX() + 1).containsKey(blueButterfly.getY() - 1))){
+		} else if((board.hasCoordinate(blueButterfly.getX(), blueButterfly.getY() - 1)) && 
+				(board.hasCoordinate(blueButterfly.getX(), blueButterfly.getY() + 1)) && 
+				(board.hasCoordinate(blueButterfly.getX() - 1, blueButterfly.getY())) && 
+				(board.hasCoordinate(blueButterfly.getX() - 1, blueButterfly.getY() + 1)) && 
+				(board.hasCoordinate(blueButterfly.getX() + 1, blueButterfly.getY())) && 
+				(board.hasCoordinate(blueButterfly.getX() + 1, blueButterfly.getY() - 1))){
 			isWin = true;
 		} else {
 			isWin = false;
@@ -337,27 +303,27 @@ public class BetaHantoGame implements HantoGame {
 
 		return isWin;
 	}
-	
+
 	/**
 	 * @return whether or not the game is a draw
 	 */
 	private boolean isDraw() {
-		
+
 		// If the current turn number is 7, the game ends in a draw
 		// The turn number is set before this is checked,
 		// so this will check essentially at the very beginning of turn 7
 		return turnNumber >= 7;
 	}
-	
+
 	/**
 	 * 
 	 * @param to the desination coordinate
 	 * @return whether this coordinate is (0, 0)
 	 */
 	private boolean firstMoveValid(HantoCoordinate to) {
-		
+
 		boolean isValid;
-		
+
 		if(to.getX() == 0 && to.getY() == 0){
 			isValid = true;
 		} else {
