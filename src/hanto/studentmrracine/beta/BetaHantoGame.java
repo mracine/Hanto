@@ -161,7 +161,9 @@ public class BetaHantoGame implements HantoGame {
 		switchTurn(); // Switch the current player's turn
 
 		// Checks the result to return
-		if(isBlueWin()){
+		if(isBlueWin() && isRedWin()){
+			result = MoveResult.DRAW;
+		} else if(isBlueWin()){
 			result = MoveResult.BLUE_WINS;
 		} else if(isRedWin()){
 			result = MoveResult.RED_WINS;

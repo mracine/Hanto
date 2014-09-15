@@ -63,23 +63,23 @@ public class BetaHantoGameTest {
 		BetaCoordinate bc1 = new BetaCoordinate(0, 0);
 		assertEquals(0, bc1.getX());
 		assertEquals(0, bc1.getY());
-		
+
 		HantoCoordinate hc1 = new BetaCoordinate(-1, 2);
 		BetaCoordinate bc2 = new BetaCoordinate(hc1);
 		assertEquals(-1, bc2.getX());
 		assertEquals(2, bc2.getY());
-		
+
 		bc2.setPiece(new Sparrow(HantoPlayerColor.BLUE));
 		assertEquals(HantoPieceType.SPARROW, bc2.getPiece().getType());
 		assertEquals(HantoPlayerColor.BLUE, bc2.getPiece().getColor());
-		
+
 		BetaCoordinate bc3 = new BetaCoordinate(1, 2, new Butterfly(HantoPlayerColor.RED));
 		assertEquals(HantoPieceType.BUTTERFLY, bc3.getPiece().getType());
 		assertEquals(HantoPlayerColor.RED, bc3.getPiece().getColor());
 		assertEquals(1, bc3.getX());
 		assertEquals(2, bc3.getY());
 	}
-	
+
 	/**
 	 * Tests a sample playthrough of a Beta Hanto game
 	 */
@@ -122,15 +122,15 @@ public class BetaHantoGameTest {
 			// BLUE places SPARROW at (-1, 0)
 			assertEquals(MoveResult.OK,
 					bHanto.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-1, 0)));
-			
+
 			// RED places SPARROW at (-2, -1)
 			assertEquals(MoveResult.OK,
 					bHanto.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-2, -1)));
-			
+
 			// BLUE places SPARROW at (-1, 1)
 			assertEquals(MoveResult.OK,
 					bHanto.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-1, 1)));
-			
+
 			// RED places SPARROW at (-2, 2)
 			assertEquals(MoveResult.DRAW,
 					bHanto.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-2, 2)));
@@ -327,6 +327,60 @@ public class BetaHantoGameTest {
 	}
 
 	/**
+	 * Tests when both players butterflies are simultaneously surrounded
+	 */
+	@Test
+	public void testButterflyDraw(){
+
+		BetaHantoGame testB = new BetaHantoGame(HantoPlayerColor.BLUE);
+
+		try {
+			// BLUE places BUTTERFLY at (0, 0)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(0, 0)));
+
+			// RED places BUTTERFLY at (0, 1)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(0, 1)));
+
+			// BLUE places SPARROW at (0, 2)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(0, 2)));
+
+			// RED places SPARROW at (1, 1)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(1, 1)));
+
+			// BLUE places SPARROW at (1, 0)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(1, 0)));
+
+			// RED places SPARROW at (1, -1)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(1, -1)));
+
+			// BLUE places SPARROW at (0, -1)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(0, -1)));
+			
+			// RED places SPARROW at (-1, 0)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-1, 0)));
+			
+			// BLUE places SPARROW at (-1, 2)
+			assertEquals(MoveResult.OK,
+					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-1, 2)));
+			
+			// RED places SPARROW at (-1, 1)
+			assertEquals(MoveResult.DRAW,
+					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(-1, 1)));
+
+		} catch (HantoException e){
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Tests an unconnected move
 	 */
 	@Test
@@ -338,11 +392,11 @@ public class BetaHantoGameTest {
 			// BLUE places BUTTERFLY at (0, 0)
 			assertEquals(MoveResult.OK,
 					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(0, 0)));
-			
+
 			// RED places a BUTTERFLY at (0, 3)
 			assertEquals(MoveResult.OK,
 					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(0, 3)));
-			
+
 		} catch (HantoException e) {
 			assertEquals("Move is invalid", e.getMessage());
 		}
@@ -353,18 +407,18 @@ public class BetaHantoGameTest {
 	 */
 	@Test
 	public void testOccupiedSpace(){
-		
+
 		BetaHantoGame testB = new BetaHantoGame(HantoPlayerColor.BLUE);
 
 		try {
 			// BLUE places BUTTERFLY at (0, 0)
 			assertEquals(MoveResult.OK,
 					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(0, 0)));
-			
+
 			// RED places a BUTTERFLY at (0, 0)
 			assertEquals(MoveResult.OK,
 					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(0, 0)));
-			
+
 		} catch (HantoException e) {
 			assertEquals("Move is invalid", e.getMessage());
 		}
@@ -375,75 +429,75 @@ public class BetaHantoGameTest {
 	 */
 	@Test
 	public void testGetPieceAt(){
-		
+
 		BetaHantoGame testB = new BetaHantoGame(HantoPlayerColor.BLUE);
-		
+
 		assertEquals(null, testB.getPieceAt(new BetaCoordinate(0, 0)));
-		
+
 		try {
-			
+
 			// BLUE places BUTTERFLY at (0, 0)
 			assertEquals(MoveResult.OK, 
 					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(0, 0)));
-			
+
 			assertEquals(HantoPieceType.BUTTERFLY, testB.getPieceAt(new BetaCoordinate(0, 0)).getType());
 			assertEquals(HantoPlayerColor.BLUE, testB.getPieceAt(new BetaCoordinate(0, 0)).getColor());
-			
+
 			// RED places SPARROW at (0, 1)
 			assertEquals(MoveResult.OK,
 					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(0, 1)));
-			
+
 			assertEquals(HantoPieceType.SPARROW, testB.getPieceAt(new BetaCoordinate(0, 1)).getType());
 			assertEquals(HantoPlayerColor.RED, testB.getPieceAt(new BetaCoordinate(0, 1)).getColor());
-			
+
 		} catch (HantoException e) { 
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Tests the printable board function
 	 */
 	@Test
 	public void testPrintableBoard(){
-		
+
 		BetaHantoGame testB = new BetaHantoGame(HantoPlayerColor.BLUE);
-		
+
 		try {
 			// BLUE places BUTTERFLY at (0, 0)
 			assertEquals(MoveResult.OK, 
 					testB.makeMove(HantoPieceType.BUTTERFLY, null, new BetaCoordinate(0, 0)));
-			
+
 			assertEquals("BLUE B at (0, 0)\n", testB.getPrintableBoard());
-			
+
 			// RED places SPARROW at (0, 1)
 			assertEquals(MoveResult.OK, 
 					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(0, 1)));
-			
+
 			assertEquals("BLUE B at (0, 0)\n"
 					+ "RED S at (0, 1)\n", testB.getPrintableBoard());
-			
+
 			// BLUE places SPARROW at (0, 2)
 			assertEquals(MoveResult.OK, 
 					testB.makeMove(HantoPieceType.SPARROW, null, new BetaCoordinate(0, 2)));
-			
+
 			assertEquals("BLUE B at (0, 0)\n"
 					+ "RED S at (0, 1)\n"
 					+ "BLUE S at (0, 2)\n", testB.getPrintableBoard());
-			
+
 		} catch (HantoException e) { 
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Tests an invalid piece type
 	 */
 	@Test
 	public void testInvalidPieceType(){
-		
+
 		BetaHantoGame testB = new BetaHantoGame(HantoPlayerColor.BLUE);
-		
+
 		try {
 			assertEquals(MoveResult.OK, 
 					testB.makeMove(HantoPieceType.CRANE, null, new BetaCoordinate(0, 0)));
