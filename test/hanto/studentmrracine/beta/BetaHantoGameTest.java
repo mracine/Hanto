@@ -11,7 +11,6 @@
 package hanto.studentmrracine.beta;
 
 import static org.junit.Assert.*;
-import hanto.HantoGameFactory;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -20,7 +19,9 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
+import hanto.studentmrracine.HantoGameFactory;
 import hanto.studentmrracine.common.Butterfly;
+import hanto.studentmrracine.common.HantoCoord;
 import hanto.studentmrracine.common.Sparrow;
 
 import org.junit.Test;
@@ -504,5 +505,13 @@ public class BetaHantoGameTest {
 		} catch (HantoException e) {
 			assertEquals("Invalid piece type", e.getMessage());
 		}
+	}
+	
+	@Test(expected = HantoException.class)
+	public void testMove() throws HantoException {
+		
+		HantoGame g = 
+				HantoGameFactory.getInstance().makeHantoGame(HantoGameID.BETA_HANTO);
+		g.makeMove(HantoPieceType.SPARROW, new HantoCoord(0, 1), new HantoCoord(0, 0));
 	}
 }

@@ -91,9 +91,13 @@ public class BetaHantoGame implements HantoGame {
 		// If it is the first move, validate it
 		// Else, make sure that the player has placed the butterfly
 		// Else, throw an exception if the move is not legal
+		if (from != null){
+			throw new HantoException("Cannot move in Beta Hanto");
+		}
+
 		if (turnNumber == 1 && currentPlayerTurn == movesFirst){
 
-			if(!firstMoveValid(to)){
+			if(!isFirstMoveValid(to)){
 				throw new HantoException("First move is invalid");
 			}
 		} else if (turnNumber == 4){
@@ -109,8 +113,6 @@ public class BetaHantoGame implements HantoGame {
 					throw new HantoException("Red butterfly must be placed");
 				}
 			}
-		} else if (from != null){
-			throw new HantoException("Cannot move in Beta Hanto");
 		} else if(!isLegalMove(to)){
 			throw new HantoException("Move is invalid");
 		}
@@ -320,7 +322,7 @@ public class BetaHantoGame implements HantoGame {
 	 * @param to the desination coordinate
 	 * @return whether this coordinate is (0, 0)
 	 */
-	private boolean firstMoveValid(HantoCoordinate to) {
+	private boolean isFirstMoveValid(HantoCoordinate to) {
 
 		boolean isValid;
 

@@ -69,24 +69,6 @@ public class Board {
 	}
 	
 	/**
-	 * Returns a BetaCoordinate if the coordinate exists
-	 * @param coord the specified coordinate
-	 * @return the coordinate
-	 */
-	public BetaCoordinate getCoord(HantoCoordinate coord){
-		
-		BetaCoordinate betaCoord;
-		
-		if(hasCoordinate(coord)){
-			betaCoord = board.get(coord.getX()).get(coord.getY());
-		} else {
-			betaCoord = null;
-		}
-		
-		return betaCoord;
-	}
-	
-	/**
 	 * Returns a piece at the specified coordinate or null
 	 * if there is none
 	 * 

@@ -20,23 +20,21 @@ import hanto.common.HantoPlayerColor;
  * @author mrracine
  *
  */
-public class Butterfly implements HantoPiece {
+public class Butterfly extends Piece implements HantoPiece {
 
-	private final HantoPlayerColor color;
-	
 	/**
 	 * Sets the color of the butterfly
 	 * @param pieceColor the color of the butterfly
 	 */
 	public Butterfly(HantoPlayerColor pieceColor){
-		color = pieceColor;
+		super(pieceColor);
 	}
 	
 	/**
 	 * @return the color of this butterfly
 	 */
 	public HantoPlayerColor getColor() {
-		return color;
+		return super.getColor();
 	}
 
 	/**

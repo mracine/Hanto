@@ -15,32 +15,36 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 
 /**
- * The implementation of a Sparrow. Implements HantoPiece
+ * The abstract class for a Hanto piece. All piece classes that implement
+ * the HantoPiece interface share the common parameter of color. This
+ * abstract class simply abstracts out that paramter from classes that extend it
  * 
  * @author mrracine
- *
  */
-public class Sparrow extends Piece implements HantoPiece {
+public abstract class Piece implements HantoPiece {
+
+	/**
+	 * The color of the piece
+	 */
+	protected final HantoPlayerColor color;
 	
 	/**
-	 * The default constructor for a sparrow
-	 * @param pieceColor the color of this sparrow piece
+	 * Sets the color of the piece
+	 * @param pieceColor the color of the piece
 	 */
-	public Sparrow(HantoPlayerColor pieceColor){
-		super(pieceColor);
+	protected Piece(HantoPlayerColor pieceColor){
+		color = pieceColor;
 	}
-
+	
 	/**
 	 * @return the color of this piece
 	 */
 	public HantoPlayerColor getColor() {
-		return super.getColor();
+		return color;
 	}
-
+	
 	/**
-	 * @return the type of this piece, a SPARROW
+	 * @return the type of this piece, a CRAB
 	 */
-	public HantoPieceType getType() {
-		return HantoPieceType.SPARROW;
-	}
+	public abstract HantoPieceType getType();
 }

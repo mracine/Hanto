@@ -11,7 +11,6 @@
 package hanto.studentmrracine.alpha;
 
 import static org.junit.Assert.*;
-import hanto.HantoGameFactory;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -20,6 +19,7 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
+import hanto.studentmrracine.HantoGameFactory;
 import hanto.studentmrracine.common.Butterfly;
 
 import org.junit.Test;

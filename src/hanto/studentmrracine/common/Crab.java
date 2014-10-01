@@ -15,32 +15,33 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 
 /**
- * The implementation of a Sparrow. Implements HantoPiece
+ * The class for a Hanto Crab
  * 
  * @author mrracine
- *
  */
-public class Sparrow extends Piece implements HantoPiece {
-	
+public class Crab extends Piece implements HantoPiece {
+
 	/**
-	 * The default constructor for a sparrow
-	 * @param pieceColor the color of this sparrow piece
+	 * Sets the color of the crab
+	 * @param pieceColor the color of the crab
 	 */
-	public Sparrow(HantoPlayerColor pieceColor){
+	public Crab(HantoPlayerColor pieceColor){
 		super(pieceColor);
 	}
-
+	
 	/**
 	 * @return the color of this piece
 	 */
+	@Override
 	public HantoPlayerColor getColor() {
 		return super.getColor();
 	}
 
 	/**
-	 * @return the type of this piece, a SPARROW
+	 * @return the type of this piece, a CRAB
 	 */
+	@Override
 	public HantoPieceType getType() {
-		return HantoPieceType.SPARROW;
+		return HantoPieceType.CRAB;
 	}
 }
