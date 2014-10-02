@@ -39,6 +39,7 @@ public class SlideValidator {
 
 	/**
 	 * Checks whether the piece can slide from one location to another
+	 * Note: Not sure why CodePro is complaining about code in comments
 	 * 
 	 * @param b the Hanto board
 	 * @param from the starting coordinate of the move
@@ -65,13 +66,13 @@ public class SlideValidator {
 					new HantoCoord(f.getX() - 1, f.getY() + 1));
 		}
 		
-		// Moving northeast (relatively)
+		// Moving northeast (relatively) // $codepro.audit.disable codeInComments
 		else if(deltaX >= 1 && deltaY == 0){
 			canSlide = !isBlocked(b, new HantoCoord(f.getX(), f.getY() + 1),
 					new HantoCoord(f.getX() + 1, f.getY() - 1));
 		}
 		
-		// Moving southeast (relatively)
+		// Moving southeast (relatively) // $codepro.audit.disable codeInComments
 		else if(deltaX >= 1 && deltaY <= -1){
 			canSlide = !isBlocked(b, new HantoCoord(f.getX() + 1, f.getY()),
 					new HantoCoord(f.getX(), f.getY() - 1));
@@ -83,13 +84,13 @@ public class SlideValidator {
 					new HantoCoord(f.getX() - 1, f.getY()));
 		}
 		
-		// Moving southwest (relatively)
+		// Moving southwest (relatively) // $codepro.audit.disable codeInComments
 		else if(deltaX <= -1 && deltaY == 0){
 			canSlide = !isBlocked(b, new HantoCoord(f.getX(), f.getY() - 1),
 					new HantoCoord(f.getX() - 1, f.getY() + 1));
 		}
 		
-		// Moving northwest (relatively)
+		// Moving northwest (relatively) // $codepro.audit.disable codeInComments
 		else if(deltaX <= -1 && deltaY >= 1){
 			canSlide = !isBlocked(b, new HantoCoord(f.getX(), f.getY() + 1),
 					new HantoCoord(f.getX() - 1, f.getY()));

@@ -8,7 +8,7 @@ import hanto.studentmrracine.common.HantoCoord;
 import hanto.studentmrracine.common.HantoPieceFactory;
 
 public class GammaHantoTestGame extends GammaHantoGame implements HantoGame, HantoTestGame {
-
+	
 	public GammaHantoTestGame(HantoPlayerColor movesFirst) {
 		super(movesFirst);
 	}

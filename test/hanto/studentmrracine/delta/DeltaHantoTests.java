@@ -7,6 +7,8 @@ import hanto.common.HantoGameID;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.common.HantoTestGame;
+import hanto.common.HantoTestGameFactory;
 import hanto.common.MoveResult;
 import hanto.studentmrracine.HantoGameFactory;
 import hanto.studentmrracine.common.Butterfly;
@@ -14,7 +16,6 @@ import hanto.studentmrracine.common.HantoCoord;
 import hanto.studentmrracine.common.HantoPieceFactory;
 import hanto.studentmrracine.common.PlayerInventory;
 import hanto.studentmrracine.common.Sparrow;
-import hanto.studentmrracine.gamma.GammaInventory;
 
 import org.junit.Test;
 
@@ -201,5 +202,71 @@ public class DeltaHantoTests {
 		assertFalse(i.crabsInInventory());
 		i.placeCrab();
 		assertFalse(i.crabsInInventory());
+	}
+	
+	@Test(expected = HantoException.class)
+	public void testIllegalRedFourthTurn() throws HantoException {
+
+		HantoTestGame.PieceLocationPair[] initPieces = new HantoTestGame.PieceLocationPair[]{
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(0, 0)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(0, 1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(1, -1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(1, 1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(0, -1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(-1, 2)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, new HantoCoord(1, -2))
+		};
+
+		HantoTestGame g = 
+				HantoTestGameFactory.getInstance().makeHantoTestGame(HantoGameID.DELTA_HANTO);
+
+		g.initializeBoard(initPieces);
+		g.setTurnNumber(4);
+		g.setPlayerMoving(HantoPlayerColor.RED);
+
+		g.makeMove(HantoPieceType.SPARROW, null, new HantoCoord(0, 2));
+	}
+	
+	@Test(expected = HantoException.class)
+	public void testIllegalBlueFourthTurn() throws HantoException {
+
+		HantoTestGame.PieceLocationPair[] initPieces = new HantoTestGame.PieceLocationPair[]{
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(0, 0)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(0, 1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(1, -1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(1, 1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(0, -1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(-1, 2))
+		};
+
+		HantoTestGame g = 
+				HantoTestGameFactory.getInstance().makeHantoTestGame(HantoGameID.DELTA_HANTO);
+
+		g.initializeBoard(initPieces);
+		g.setTurnNumber(4);
+
+		g.makeMove(HantoPieceType.SPARROW, null, new HantoCoord(1, -2));
+	}
+	
+	@Test
+	public void testOKFourthTurn() throws HantoException {
+
+		HantoTestGame.PieceLocationPair[] initPieces = new HantoTestGame.PieceLocationPair[]{
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(0, 0)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(0, 1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(1, -1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(1, 1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new HantoCoord(0, -1)),
+				new HantoTestGame.PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.SPARROW, new HantoCoord(-1, 2))
+		};
+
+		HantoTestGame g = 
+				HantoTestGameFactory.getInstance().makeHantoTestGame(HantoGameID.DELTA_HANTO);
+
+		g.initializeBoard(initPieces);
+		g.setTurnNumber(4);
+
+		assertEquals(MoveResult.OK, 
+				g.makeMove(HantoPieceType.BUTTERFLY, null, new HantoCoord(1, -2)));
 	}
 }

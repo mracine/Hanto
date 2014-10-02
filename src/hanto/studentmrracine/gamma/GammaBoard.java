@@ -36,15 +36,6 @@ public class GammaBoard implements Board {
 	 */
 	private Map<HantoCoordinate, HantoPiece> board = 
 			new HashMap<HantoCoordinate, HantoPiece>();
-	
-	/**
-	 * Lists of coordinates that can be used to quickly access the hashmap
-	 */
-	private List<HantoCoordinate> bluePieces = 
-			new ArrayList<HantoCoordinate>();
-	
-	private List<HantoCoordinate> redPieces = 
-			new ArrayList<HantoCoordinate>();
 
 	/**
 	 * @return the number of pieces on the board

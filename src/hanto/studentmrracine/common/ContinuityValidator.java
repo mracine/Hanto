@@ -49,7 +49,6 @@ public class ContinuityValidator {
 	 * @param b the Hanto board
 	 * @param from the starting coordinate of the move
 	 * @param start the starting coordinate of the traversal (typically the "to" of the move)
-	 * @param to 
 	 * @return whether or not the board is connected
 	 */
 	public boolean isContinuous(Board b, HantoCoordinate from, HantoCoordinate start){
