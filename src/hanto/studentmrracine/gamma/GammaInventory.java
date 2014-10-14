@@ -10,6 +10,9 @@
 
 package hanto.studentmrracine.gamma;
 
+import java.util.List;
+
+import hanto.common.HantoPiece;
 import hanto.studentmrracine.common.PlayerInventory;
 
 /**
@@ -19,7 +22,7 @@ import hanto.studentmrracine.common.PlayerInventory;
  * @author mrracine
  */
 public class GammaInventory implements PlayerInventory {
-	
+
 	private int butterflies = 1;
 	private int sparrows = 5;
 
@@ -31,48 +34,46 @@ public class GammaInventory implements PlayerInventory {
 	}
 
 	/**
-	 * Places a butterfly on the board
-	 */
-	public void placeButterfly() {
-		if(butterfliesInInventory()){
-			butterflies--;
-		}
-	}
-	
-	/**
 	 * Checks whether or not there are sparrows in the inventory
 	 */
 	public boolean sparrowsInInventory() {
 		return sparrows > 0;
 	}
-
+	
 	/**
-	 * Places a sparrow on the board
+	 * Removes a piece from the board
 	 */
-	public void placeSparrow() {
-		if(sparrowsInInventory()){
-			sparrows--;
+	public void removeFromInventory(HantoPiece piece) {
+
+		switch(piece.getType()){
+		case BUTTERFLY:
+			if(butterfliesInInventory()){
+				butterflies--;
+			}
+			break;
+		case SPARROW:
+			if(sparrowsInInventory()){
+				sparrows--;
+			}
+			break;
+		default:
+			break;
 		}
 	}
-
 	
+
 	/**
 	 * The methods below are not needed in Gamma Hanto but may be needed
 	 * for later versions
 	 */
-	
-	
+
+
 	/**
 	 * Returns false for Gamma Hanto
 	 */
 	public boolean crabsInInventory() {
 		return false;
 	}
-
-	/**
-	 * Does nothing for Gamma Hanto
-	 */
-	public void placeCrab() {}
 
 	/**
 	 * Returns false for Gamma Hanto
@@ -82,21 +83,11 @@ public class GammaInventory implements PlayerInventory {
 	}
 
 	/**
-	 * Does nothing for Gamma Hanto
-	 */
-	public void placeHorse() {}
-
-	/**
 	 * Returns false for Gamma Hanto
 	 */
 	public boolean cranesInInventory() {
 		return false;
 	}
-
-	/**
-	 * Does nothing for Gamma Hanto
-	 */
-	public void placeCrane() {}
 
 	/**
 	 * Returns false for Gamma Hanto
@@ -106,7 +97,9 @@ public class GammaInventory implements PlayerInventory {
 	}
 
 	/**
-	 * Does nothing for Gamma Hanto
+	 * Not needed for Gamma Hanto
 	 */
-	public void placeDove() {}
+	public List<HantoPiece> piecesLeft() {
+		return null;
+	}
 }

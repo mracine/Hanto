@@ -10,6 +10,10 @@
 
 package hanto.studentmrracine.common;
 
+import hanto.common.HantoPiece;
+
+import java.util.List;
+
 /**
  * Interface for getting/setting the number of pieces for
  * a player's inventory
@@ -27,20 +31,10 @@ public interface PlayerInventory {
 	boolean butterfliesInInventory();
 	
 	/**
-	 * Places a butterfly on the board
-	 */
-	void placeButterfly();
-	
-	/**
 	 * Returns whether or not there are crabs in the player's inventory
 	 * @return whether or not there are crabs in the inventory
 	 */
 	boolean crabsInInventory();
-	
-	/**
-	 * Places a crab on the board
-	 */
-	void placeCrab();
 	
 	/**
 	 * Returns whether or not there are horses in the player's inventory
@@ -49,20 +43,10 @@ public interface PlayerInventory {
 	boolean horsesInInventory();
 	
 	/**
-	 * Places a horse on the board
-	 */
-	void placeHorse();
-	
-	/**
 	 * Returns whether or not there are cranes in the player's inventory
 	 * @return whether or not there are cranes in the inventory
 	 */
 	boolean cranesInInventory();
-	
-	/**
-	 * Places a crane on the board
-	 */
-	void placeCrane();
 	
 	/**
 	 * Returns whether or not there are doves in the player's inventory
@@ -71,18 +55,20 @@ public interface PlayerInventory {
 	boolean dovesInInventory();
 	
 	/**
-	 * Places a dove on the board
-	 */
-	void placeDove();
-	
-	/**
 	 * Returns whether or not there are sparrows in the player's inventory
 	 * @return whether or not there are sparrows in the inventory
 	 */
 	boolean sparrowsInInventory();
 	
 	/**
-	 * Places a sparrow on the board
+	 * Removes a piece from the inventory
+	 * @param piece the piece to remove
 	 */
-	void placeSparrow();
+	void removeFromInventory(HantoPiece piece);
+	
+	/**
+	 * Returns a list containing the piece types left in the inventory
+	 * @return the pieces left in the inventory
+	 */
+	List<HantoPiece> piecesLeft();
 }

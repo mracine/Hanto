@@ -10,6 +10,9 @@
 
 package hanto.studentmrracine.delta;
 
+import java.util.List;
+
+import hanto.common.HantoPiece;
 import hanto.studentmrracine.common.PlayerInventory;
 
 /**
@@ -23,21 +26,12 @@ public class DeltaInventory implements PlayerInventory {
 	private int butterflies = 1;
 	private int sparrows = 4;
 	private int crabs = 4;
-
+	
 	/**
 	 * Checks whether or not the butterfly has been placed
 	 */
 	public boolean butterfliesInInventory() {
 		return butterflies > 0;
-	}
-
-	/**
-	 * Places a butterfly on the board
-	 */
-	public void placeButterfly() {
-		if(butterfliesInInventory()){
-			butterflies--;
-		}
 	}
 	
 	/**
@@ -46,15 +40,6 @@ public class DeltaInventory implements PlayerInventory {
 	public boolean sparrowsInInventory() {
 		return sparrows > 0;
 	}
-
-	/**
-	 * Places a sparrow on the board
-	 */
-	public void placeSparrow() {
-		if(sparrowsInInventory()){
-			sparrows--;
-		}
-	}
 	
 	/**
 	 * Checks whether there are crabs in the inventory
@@ -62,13 +47,30 @@ public class DeltaInventory implements PlayerInventory {
 	public boolean crabsInInventory() {
 		return crabs > 0;
 	}
-
+	
 	/**
-	 * Places a crab and removes it from inventory
+	 * Removes a piece from the board
 	 */
-	public void placeCrab() {
-		if(crabsInInventory()){
-			crabs--;
+	public void removeFromInventory(HantoPiece piece) {
+		
+		switch(piece.getType()){
+		case BUTTERFLY:
+			if(butterfliesInInventory()){
+				butterflies--;
+			}
+			break;
+		case SPARROW:
+			if(sparrowsInInventory()){
+				sparrows--;
+			}
+			break;
+		case CRAB:
+			if(crabsInInventory()){
+				crabs--;
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -87,22 +89,12 @@ public class DeltaInventory implements PlayerInventory {
 	}
 
 	/**
-	 * Does nothing for Delta Hanto
-	 */
-	public void placeHorse() {}
-
-	/**
 	 * Returns false for Delta Hanto
 	 */
 	public boolean cranesInInventory() {
 		return false;
 	}
-
-	/**
-	 * Does nothing for Delta Hanto
-	 */
-	public void placeCrane() {}
-
+	
 	/**
 	 * Returns false for Delta Hanto
 	 */
@@ -111,7 +103,9 @@ public class DeltaInventory implements PlayerInventory {
 	}
 
 	/**
-	 * Does nothing for Delta Hanto
+	 * Not needed for Delta Hanto
 	 */
-	public void placeDove() {}
+	public List<HantoPiece> piecesLeft() {
+		return null;
+	}
 }

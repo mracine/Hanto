@@ -31,13 +31,6 @@ public class Sparrow extends Piece implements HantoPiece {
 	}
 
 	/**
-	 * @return the color of this piece
-	 */
-	public HantoPlayerColor getColor() {
-		return super.getColor();
-	}
-
-	/**
 	 * @return the type of this piece, a SPARROW
 	 */
 	public HantoPieceType getType() {

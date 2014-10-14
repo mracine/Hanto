@@ -15,8 +15,8 @@ import hanto.studentmrracine.common.Board;
 import hanto.studentmrracine.common.Butterfly;
 import hanto.studentmrracine.common.HantoCoord;
 import hanto.studentmrracine.common.PlayerInventory;
-import hanto.studentmrracine.common.SlideValidator;
 import hanto.studentmrracine.common.Sparrow;
+import hanto.studentmrracine.validation.SlideValidator;
 
 import org.junit.Test;
 
@@ -26,9 +26,9 @@ public class GammaHantoTests {
 	public void testBoardIsCoordinateOccupied() {
 		Board b = new GammaBoard();
 		b.placePiece(new HantoCoord(0, 0), new Sparrow(HantoPlayerColor.BLUE));
-		assertTrue(b.isCoordinateOccupied(0, 0));
-		assertTrue(b.isCoordinateOccupied(new HantoCoord(0, 0)));
-		assertFalse(b.isCoordinateOccupied(0, 1));
+		assertTrue(b.isCoordOccupied(0, 0));
+		assertTrue(b.isCoordOccupied(new HantoCoord(0, 0)));
+		assertFalse(b.isCoordOccupied(0, 1));
 	}
 
 	@Test
@@ -75,28 +75,28 @@ public class GammaHantoTests {
 		b.placePiece(new HantoCoord(0, 1), new Sparrow(HantoPlayerColor.RED));
 
 		// Place two pieces next to each other
-		assertTrue(b.isAnAdjacentSpaceOccupied(new HantoCoord(0, 0)));
-		assertTrue(b.isAnAdjacentSpaceOccupied(new HantoCoord(0, 1)));
+		assertTrue(b.isAdjacentSpaceOccupied(new HantoCoord(0, 0)));
+		assertTrue(b.isAdjacentSpaceOccupied(new HantoCoord(0, 1)));
 
 		// Move piece out of range (not adjacent)
 		b.movePiece(new HantoCoord(0, 1), new HantoCoord(0, 2));
-		assertFalse(b.isAnAdjacentSpaceOccupied(new HantoCoord(0, 0)));
+		assertFalse(b.isAdjacentSpaceOccupied(new HantoCoord(0, 0)));
 
 		// Start to move piece around (0, 0)
 		b.movePiece(new HantoCoord(0, 2), new HantoCoord(1, 0));
-		assertTrue(b.isAnAdjacentSpaceOccupied(new HantoCoord(0, 0)));
+		assertTrue(b.isAdjacentSpaceOccupied(new HantoCoord(0, 0)));
 
 		b.movePiece(new HantoCoord(1, 0), new HantoCoord(1, -1));
-		assertTrue(b.isAnAdjacentSpaceOccupied(new HantoCoord(0, 0)));
+		assertTrue(b.isAdjacentSpaceOccupied(new HantoCoord(0, 0)));
 
 		b.movePiece(new HantoCoord(1, -1), new HantoCoord(0, -1));
-		assertTrue(b.isAnAdjacentSpaceOccupied(new HantoCoord(0, 0)));
+		assertTrue(b.isAdjacentSpaceOccupied(new HantoCoord(0, 0)));
 
 		b.movePiece(new HantoCoord(0, -1), new HantoCoord(-1, 0));
-		assertTrue(b.isAnAdjacentSpaceOccupied(new HantoCoord(0, 0)));
+		assertTrue(b.isAdjacentSpaceOccupied(new HantoCoord(0, 0)));
 
 		b.movePiece(new HantoCoord(-1, 0), new HantoCoord(-1, 1));
-		assertTrue(b.isAnAdjacentSpaceOccupied(new HantoCoord(0, 0)));		
+		assertTrue(b.isAdjacentSpaceOccupied(new HantoCoord(0, 0)));		
 	}
 
 	@Test
@@ -124,15 +124,15 @@ public class GammaHantoTests {
 
 		// Check different placements around (0, 0)
 		b.placePiece(new HantoCoord(0, 0), new Sparrow(HantoPlayerColor.BLUE));		
-		assertTrue(b.hasAdjacentOpposingPieces(new HantoCoord(0, 1), HantoPlayerColor.RED));
-		assertTrue(b.hasAdjacentOpposingPieces(new HantoCoord(1, 0), HantoPlayerColor.RED));
-		assertTrue(b.hasAdjacentOpposingPieces(new HantoCoord(1, -1), HantoPlayerColor.RED));
-		assertTrue(b.hasAdjacentOpposingPieces(new HantoCoord(0, -1), HantoPlayerColor.RED));
-		assertTrue(b.hasAdjacentOpposingPieces(new HantoCoord(-1, 0), HantoPlayerColor.RED));
-		assertTrue(b.hasAdjacentOpposingPieces(new HantoCoord(-1, 1), HantoPlayerColor.RED));
+		assertTrue(b.isAdjacentOpposingPieces(new HantoCoord(0, 1), HantoPlayerColor.RED));
+		assertTrue(b.isAdjacentOpposingPieces(new HantoCoord(1, 0), HantoPlayerColor.RED));
+		assertTrue(b.isAdjacentOpposingPieces(new HantoCoord(1, -1), HantoPlayerColor.RED));
+		assertTrue(b.isAdjacentOpposingPieces(new HantoCoord(0, -1), HantoPlayerColor.RED));
+		assertTrue(b.isAdjacentOpposingPieces(new HantoCoord(-1, 0), HantoPlayerColor.RED));
+		assertTrue(b.isAdjacentOpposingPieces(new HantoCoord(-1, 1), HantoPlayerColor.RED));
 
-		assertFalse(b.hasAdjacentOpposingPieces(new HantoCoord(0, 1), HantoPlayerColor.BLUE));
-		assertFalse(b.hasAdjacentOpposingPieces(new HantoCoord(4, 4), HantoPlayerColor.BLUE));
+		assertFalse(b.isAdjacentOpposingPieces(new HantoCoord(0, 1), HantoPlayerColor.BLUE));
+		assertFalse(b.isAdjacentOpposingPieces(new HantoCoord(4, 4), HantoPlayerColor.BLUE));
 	}
 
 	@Test
@@ -289,11 +289,13 @@ public class GammaHantoTests {
 		HantoTestGame g = 
 				HantoTestGameFactory.getInstance().makeHantoTestGame(HantoGameID.GAMMA_HANTO);
 
-		g.makeMove(HantoPieceType.SPARROW, null, new HantoCoord(0, 0));
+		g.makeMove(HantoPieceType.BUTTERFLY, null, new HantoCoord(0, 0));
+		g.makeMove(HantoPieceType.BUTTERFLY, null, new HantoCoord(0, 1));
+		
 		g.setTurnNumber(21);
-
+		
 		assertEquals(MoveResult.DRAW, 
-				g.makeMove(HantoPieceType.SPARROW, null, new HantoCoord(0, 1)));
+				g.makeMove(HantoPieceType.SPARROW, null, new HantoCoord(-1, 0)));
 	}
 
 	@Test(expected = HantoException.class)
@@ -544,36 +546,24 @@ public class GammaHantoTests {
 	@Test
 	public void testGammaInventoryCrab(){
 		PlayerInventory p = new GammaInventory();
-
-		assertFalse(p.crabsInInventory());
-		p.placeCrab();
 		assertFalse(p.crabsInInventory());
 	}
 
 	@Test
 	public void testGammaInventoryHorse(){
 		PlayerInventory p = new GammaInventory();
-
-		assertFalse(p.horsesInInventory());
-		p.placeHorse();
 		assertFalse(p.horsesInInventory());
 	}
 
 	@Test
 	public void testGammaInventoryCrane(){
 		PlayerInventory p = new GammaInventory();
-
-		assertFalse(p.cranesInInventory());
-		p.placeCrane();
 		assertFalse(p.cranesInInventory());
 	}
 
 	@Test
 	public void testGammaInventoryDove(){
 		PlayerInventory p = new GammaInventory();
-
-		assertFalse(p.dovesInInventory());
-		p.placeDove();
 		assertFalse(p.dovesInInventory());
 	}
 
@@ -607,20 +597,20 @@ public class GammaHantoTests {
 		PlayerInventory i = new GammaInventory();
 		
 		assertTrue(i.butterfliesInInventory());
-		i.placeButterfly();
+		i.removeFromInventory(new Butterfly(HantoPlayerColor.RED));
 		assertFalse(i.butterfliesInInventory());
-		i.placeButterfly();
+		i.removeFromInventory(new Butterfly(HantoPlayerColor.RED));
 		assertFalse(i.butterfliesInInventory());
 		
 		assertTrue(i.sparrowsInInventory());
-		i.placeSparrow();
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.RED));
 		assertTrue(i.sparrowsInInventory());
-		i.placeSparrow();
-		i.placeSparrow();
-		i.placeSparrow();
-		i.placeSparrow();
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.RED));
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.RED));
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.RED));
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.RED));
 		assertFalse(i.sparrowsInInventory());
-		i.placeSparrow();
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.RED));
 		assertFalse(i.sparrowsInInventory());		
 	}
 	
@@ -635,20 +625,20 @@ public class GammaHantoTests {
 		b.placePiece(new HantoCoord(1, 0), new Butterfly(HantoPlayerColor.BLUE));
 		
 		// Verify move is illegal
-		assertFalse(SlideValidator.getInstance().canSlide(b, 
+		assertFalse(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(0, 1)));
 		
 		b.movePiece(new HantoCoord(-1, 1), new HantoCoord(-1, 0));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(0, 1)));
 		
 		b.movePiece(new HantoCoord(-1, 0), new HantoCoord(-1, 1));
 		b.movePiece(new HantoCoord(1, 0), new HantoCoord(1, -1));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(0, 1)));
 	}
 	
@@ -663,20 +653,20 @@ public class GammaHantoTests {
 		b.placePiece(new HantoCoord(1, -1), new Butterfly(HantoPlayerColor.BLUE));
 		
 		// Verify move is illegal
-		assertFalse(SlideValidator.getInstance().canSlide(b, 
+		assertFalse(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(1, 0)));
 		
 		b.movePiece(new HantoCoord(0, 1), new HantoCoord(-1, 1));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(1, 0)));
 		
 		b.movePiece(new HantoCoord(-1, 1), new HantoCoord(0, 1));
 		b.movePiece(new HantoCoord(1, -1), new HantoCoord(0, -1));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(1, 0)));
 	}
 	
@@ -691,20 +681,20 @@ public class GammaHantoTests {
 		b.placePiece(new HantoCoord(0, -1), new Butterfly(HantoPlayerColor.BLUE));
 		
 		// Verify move is illegal
-		assertFalse(SlideValidator.getInstance().canSlide(b, 
+		assertFalse(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(1, -1)));
 		
 		b.movePiece(new HantoCoord(1, 0), new HantoCoord(0, 1));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(1, -1)));
 		
 		b.movePiece(new HantoCoord(0, 1), new HantoCoord(1, 0));
 		b.movePiece(new HantoCoord(0, -1), new HantoCoord(-1, 0));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(1, 0), new HantoCoord(0, 1)));
 	}
 	
@@ -719,20 +709,20 @@ public class GammaHantoTests {
 		b.placePiece(new HantoCoord(-1, 1), new Butterfly(HantoPlayerColor.BLUE));
 		
 		// Verify move is illegal
-		assertFalse(SlideValidator.getInstance().canSlide(b, 
+		assertFalse(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(-1, 0)));
 		
 		b.movePiece(new HantoCoord(0, -1), new HantoCoord(1, -1));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(-1, 0)));
 		
 		b.movePiece(new HantoCoord(1, -1), new HantoCoord(0, -1));
 		b.movePiece(new HantoCoord(-1, 1), new HantoCoord(0, 1));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(-1, 0)));
 	}
 	
@@ -747,20 +737,20 @@ public class GammaHantoTests {
 		b.placePiece(new HantoCoord(-1, 0), new Butterfly(HantoPlayerColor.BLUE));
 		
 		// Verify move is illegal
-		assertFalse(SlideValidator.getInstance().canSlide(b, 
+		assertFalse(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(-1, 1)));
 		
 		b.movePiece(new HantoCoord(0, 1), new HantoCoord(1, 0));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(-1, 1)));
 		
 		b.movePiece(new HantoCoord(1, 0), new HantoCoord(0, 1));
 		b.movePiece(new HantoCoord(-1, 0), new HantoCoord(0, -1));
 		
 		// Verify move is legal
-		assertTrue(SlideValidator.getInstance().canSlide(b, 
+		assertTrue(SlideValidator.canSlide(b, 
 				new HantoCoord(0, 0), new HantoCoord(-1, 1)));
 	}
 	
@@ -774,5 +764,11 @@ public class GammaHantoTests {
 		g.makeMove(HantoPieceType.SPARROW, null, new HantoCoord(0, 1));
 		g.makeMove(HantoPieceType.SPARROW, null, new HantoCoord(1, -1));
 		g.makeMove(HantoPieceType.SPARROW, new HantoCoord(0, 1), new HantoCoord(1, 0));
+	}
+	
+	@Test
+	public void testGammaBoard(){
+		PlayerInventory p = new GammaInventory();
+		assertNull(p.piecesLeft());
 	}
 }

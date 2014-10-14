@@ -29,7 +29,6 @@ HantoTestGame {
 	@Override
 	public void setTurnNumber(int turnNumber) {
 		super.turnNumber = turnNumber;
-		currentPlayerTurn = movedFirst;
 	}
 
 	@Override

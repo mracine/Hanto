@@ -18,7 +18,8 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentmrracine.common.BaseHanto;
-import hanto.studentmrracine.common.ContinuityValidator;
+import hanto.studentmrracine.common.HantoCoord;
+import hanto.studentmrracine.common.HantoPieceFactory;
 
 /**
  * The implementation of a Gamma Hanto game
@@ -51,13 +52,24 @@ public class GammaHantoGame extends BaseHanto implements HantoGame {
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
 
-		MoveResult result = super.makeMove(pieceType, from, to);
+		// Convert the coordinates properly so the hashcode works
+		from = from == null ? null : new HantoCoord(from);
+		to = to == null ? null : new HantoCoord(to);		
 
-		if(turnNumber >= 21){
-			result = MoveResult.DRAW;
+		// Checks that the parameters are valid
+		checkMoveParams(pieceType, from, to);
+
+		preMoveCheck(pieceType, from, to);
+		movePiece(HantoPieceFactory.getInstance().createPiece(pieceType, currentPlayerTurn), 
+				from, to);
+		switchTurn();
+		postMoveCheck();
+
+		if(turnNumber >= 21 && lastMoveResult == MoveResult.OK){
+			lastMoveResult = MoveResult.DRAW;
 		}
 
-		return result;
+		return lastMoveResult;
 	}
 
 	/**
@@ -77,29 +89,5 @@ public class GammaHantoGame extends BaseHanto implements HantoGame {
 	@Override
 	public String getPrintableBoard() {
 		return super.getPrintableBoard();
-	}
-
-	/**
-	 * Since the rules for a legal movement are different for Gamma and Delta,
-	 * I overrode this method so that flying is not possible
-	 * 
-	 * @param pieceType the type of piece moving
-	 * @param from the original coordinate (if there is one)
-	 * @param to the destination coordinate
-	 * @return whether or not the move is legal 
-	 */
-	@Override
-	protected boolean isLegalMovement(HantoPieceType pieceType, 
-			HantoCoordinate from, HantoCoordinate to){
-		
-		boolean isLegal = super.isLegalMovement(pieceType, from, to);
-
-		// Pieces can only walk in Gamma Hanto
-		if(turnNumber != 1 && from != null){
-			isLegal = isLegal && areAdjacent(from, to) && 
-					ContinuityValidator.getInstance().isContinuous(board, from, to);
-		}
-
-		return isLegal;
 	}
 }

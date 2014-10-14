@@ -8,9 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package hanto.studentmrracine.common;
+package hanto.studentmrracine.validation;
 
 import hanto.common.HantoCoordinate;
+import hanto.studentmrracine.common.Board;
+import hanto.studentmrracine.common.HantoCoord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,25 +24,14 @@ import java.util.Stack;
  * @author mrracine
  */
 public class ContinuityValidator {
-
-	private static final ContinuityValidator INSTANCE = new ContinuityValidator();
 	
-	private final List<HantoCoordinate> visited = new ArrayList<HantoCoordinate>();
-	private final Stack<HantoCoordinate> toVisit = new Stack<HantoCoordinate>();
+	private static final List<HantoCoordinate> VISITED = new ArrayList<HantoCoordinate>();
+	private static final Stack<HantoCoordinate> TOVISIT = new Stack<HantoCoordinate>();
 	
 	/**
 	 * Private constructor for singleton
 	 */
-	private ContinuityValidator(){
-		//
-	}
-	
-	/**
-	 * @return the instance of this class
-	 */
-	public static ContinuityValidator getInstance(){
-		return INSTANCE;
-	}
+	private ContinuityValidator(){}
 	
 	/**
 	 * Checks whether the resulting move would leave the board
@@ -51,7 +42,7 @@ public class ContinuityValidator {
 	 * @param start the starting coordinate of the traversal (typically the "to" of the move)
 	 * @return whether or not the board is connected
 	 */
-	public boolean isContinuous(Board b, HantoCoordinate from, HantoCoordinate start){
+	public static boolean isContinuous(Board b, HantoCoordinate from, HantoCoordinate start){
 		
 		// Move the piece temporarily to test continuity
 		b.movePiece(from, start);
@@ -60,40 +51,40 @@ public class ContinuityValidator {
 		clearData();
 		
 		// Add the initial coordinate to begin with
-		toVisit.push(start);
+		TOVISIT.push(start);
 		
 		// Continue traversing until there are no unvisited
 		// nodes in this configuration
-		while(toVisit.size() != 0){
+		while(TOVISIT.size() != 0){
 			
-			HantoCoord currentNode = new HantoCoord(toVisit.pop());
+			HantoCoord currentNode = new HantoCoord(TOVISIT.pop());
 			
 			// Traverse for each neighbor
-			for(HantoCoordinate c : b.getNeighbors(currentNode)){
+			for(HantoCoordinate c : b.getOccupiedNeighbors(currentNode)){
 				
 				// If the coordinate has not been visited yet,
 				// add it to the toVisit stack
-				if(!visited.contains(c) && !toVisit.contains(c)){
-					toVisit.push(c);
+				if(!VISITED.contains(c) && !TOVISIT.contains(c)){
+					TOVISIT.push(c);
 				}
 			}
 			
 			// Add this node on the visited stack
-			visited.add(currentNode);			
+			VISITED.add(currentNode);			
 		}
 		
 		// Move the piece back
 		b.movePiece(start, from);
 		
-		return visited.size() == b.numberOfPieces();
+		return VISITED.size() == b.numberOfPieces();
 	}
 
 	/**
 	 * Clears both the visited and toVisit stacks
 	 * @param b the new board
 	 */
-	private void clearData() {
-		visited.clear();
-		toVisit.clear();
+	private static void clearData() {
+		VISITED.clear();
+		TOVISIT.clear();
 	}
 }

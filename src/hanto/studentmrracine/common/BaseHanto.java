@@ -19,7 +19,10 @@ import hanto.common.HantoGame;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.common.HantoPrematureResignationException;
 import hanto.common.MoveResult;
+import hanto.studentmrracine.validation.MoveValidator;
+import hanto.studentmrracine.validation.MovesLeftValidator;
 
 /**
  * The abstract class for Hanto games. Note that the abstract class
@@ -61,7 +64,7 @@ public abstract class BaseHanto implements HantoGame {
 	 * The result of the last move
 	 */
 	protected MoveResult lastMoveResult = MoveResult.OK;
-	
+
 	/**
 	 * The board and its methods
 	 */
@@ -84,6 +87,23 @@ public abstract class BaseHanto implements HantoGame {
 		movedFirst = movesFirst;
 		currentPlayerTurn = movedFirst;
 	}
+	
+	/**
+	 * Copy constructor for a HantoGame
+	 * 
+	 * @param g the Hanto game to copy
+	 */
+	protected BaseHanto(BaseHanto g){
+		turnNumber = g.getTurnNumber();
+		currentPlayerTurn = g.getCurrentPlayerTurn();
+		movedFirst = g.getMovedFirst();
+		blueButterfly = g.getBlueButterfly();
+		redButterfly = g.getRedButterfly();
+		blueInventory = g.getBlueInventory();
+		redInventory = g.getRedInventory();
+		lastMoveResult = g.getLastMoveResult();
+		board = g.getBoard();
+	}
 
 	/**
 	 * Makes a move and returns the result of that move
@@ -94,22 +114,28 @@ public abstract class BaseHanto implements HantoGame {
 	 * @return the result of making the move
 	 */
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
-			HantoCoordinate to) throws HantoException {
+			HantoCoordinate to) throws HantoException, 
+			HantoPrematureResignationException {
 
-		// Convert the coordinates properly so
-		// the hashcode works
+		// Convert the coordinates properly so the hashcode works
 		from = from == null ? null : new HantoCoord(from);
 		to = to == null ? null : new HantoCoord(to);		
-		
-		// Checks that the parameters are valid
-		checkMoveParams(pieceType, from, to);
 
-		preMoveCheck(pieceType, from, to);
-		movePiece(HantoPieceFactory.getInstance().createPiece(pieceType, currentPlayerTurn), 
-				from, to);
-		switchTurn();
-		
-		return postMoveCheck();
+		// Checks whether the current player has moves left or not
+		checkMovesLeft(pieceType, from, to);
+
+		if(lastMoveResult == MoveResult.OK){
+			// Checks that the parameters are valid
+			checkMoveParams(pieceType, from, to);
+
+			preMoveCheck(pieceType, from, to);
+			movePiece(HantoPieceFactory.getInstance().createPiece(pieceType, currentPlayerTurn), 
+					from, to);
+			switchTurn();
+			postMoveCheck();
+		}
+
+		return lastMoveResult;
 	}
 
 	/**
@@ -140,6 +166,40 @@ public abstract class BaseHanto implements HantoGame {
 
 		return formattedBoard;
 	}
+	
+	/**
+	 * Checks the moves left and throws an exception if necessary
+	 * 
+	 * @param pieceType the piece type
+	 * @param from the starting coordinate
+	 * @param to the destination coordinate
+	 * @throws HantoPrematureResignationException
+	 */
+	protected void checkMovesLeft(HantoPieceType pieceType, 
+			HantoCoordinate from, HantoCoordinate to) 
+					throws HantoPrematureResignationException {
+
+		PlayerInventory i;
+
+		if(currentPlayerTurn == HantoPlayerColor.BLUE){
+			i = blueInventory;
+		} else {
+			i = redInventory;
+		}
+
+		boolean hasMovesLeft = MovesLeftValidator.hasMovesLeft(this, currentPlayerTurn, i, board);
+
+		if(hasMovesLeft && pieceType == null && from == null && to == null){
+			throw new HantoPrematureResignationException();
+		} else if(!hasMovesLeft && lastMoveResult == MoveResult.OK) {
+			
+			if(currentPlayerTurn == HantoPlayerColor.BLUE){
+				lastMoveResult = MoveResult.RED_WINS;
+			} else {
+				lastMoveResult = MoveResult.BLUE_WINS;
+			}
+		}
+	}
 
 	/**
 	 * Validates that neither parameter is null and throws the appropriate exception
@@ -153,6 +213,8 @@ public abstract class BaseHanto implements HantoGame {
 	protected void checkMoveParams(HantoPieceType pieceType, HantoCoordinate from, 
 			HantoCoordinate to) throws HantoException {
 
+		// Check a premature resignation
+
 		if(to == null && pieceType == null){
 			throw new HantoException(
 					"Both the destination coordinate and piece type cannot be null");
@@ -160,7 +222,7 @@ public abstract class BaseHanto implements HantoGame {
 			throw new HantoException("The destination coordinate cannot be null");
 		} else if (pieceType == null){
 			throw new HantoException("The piece type cannot be null");
-		} else if(from != null && !board.isCoordinateOccupied(from)){
+		} else if(from != null && !board.isCoordOccupied(from)){
 
 			// If from is not null and the coordinate is not occupied,
 			// an exception should be thrown
@@ -179,65 +241,6 @@ public abstract class BaseHanto implements HantoGame {
 	}
 
 	/**
-	 * Checks the first move of a Hanto game
-	 * @param from the coordinate to move from (should be null)
-	 * @param to the coordinate to move to (should be (0, 0) or one of its adjacents)
-	 * @return whether or not the first turn move is legal
-	 */
-	protected boolean isFirstTurnLegal(HantoCoordinate from, HantoCoordinate to) {
-
-		boolean isLegal;
-
-		if(movedFirst == currentPlayerTurn){
-
-			// First move of game needs to be at (0, 0)
-			if(to.getX() != 0 || to.getY() != 0){
-				isLegal = false;
-			} else {
-				isLegal = true;
-			}
-
-		} else {
-
-			// This place needs to be adjacent to (0, 0)
-			if(!board.isAnAdjacentSpaceOccupied(to)){
-				isLegal = false;
-			} else {
-				isLegal = true;
-			}
-		}
-
-		return isLegal;
-	}
-
-	/**
-	 * Checks that the butterfly has been placed by turn 4
-	 * 
-	 * @param pieceType the type of piece to be placed
-	 * @return whether or not the move is legal
-	 */
-	protected boolean isFourthTurnLegal(HantoPieceType pieceType) {
-
-		boolean isLegal = true;
-
-		// Check that the players are placing a butterfly on the fourth turn
-		if(currentPlayerTurn == HantoPlayerColor.BLUE){
-
-			if(blueButterfly == null && pieceType != HantoPieceType.BUTTERFLY){
-				isLegal = false;
-			}
-
-		} else {
-
-			if(redButterfly == null && pieceType != HantoPieceType.BUTTERFLY){
-				isLegal = false;
-			}
-		}
-
-		return isLegal;
-	}
-
-	/**
 	 * Checks the move before it is made
 	 * 
 	 * @param pieceType the type of piece to be placed/moved
@@ -247,32 +250,8 @@ public abstract class BaseHanto implements HantoGame {
 	 */
 	protected void preMoveCheck(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
-
-		// Check that a player has not already won
-		if(lastMoveResult != MoveResult.OK){
-			throw new HantoException("Game has ended: " + lastMoveResult.toString());
-		}
 		
-		// Check the player inventories
-		// Also check that the butterfly has been placed if a movement is to be made
-		if(from == null){
-			if(currentPlayerTurn == HantoPlayerColor.BLUE && 
-					!isInInventory(pieceType, blueInventory)){
-				throw new HantoException("Piece is not in Blue's inventory");
-			} else if (!isInInventory(pieceType, redInventory)){
-				throw new HantoException("Piece is not in Red's inventory");
-			}
-		} else {
-			if(currentPlayerTurn == HantoPlayerColor.BLUE &&
-					blueButterfly == null){
-				throw new HantoException("Blue movement cannot be made until butterfly is placed");
-			} else if (redButterfly == null){
-				throw new HantoException("Red movement cannot be made until butterfly is placed");
-			}
-		}
-
-		// Check the move placement (regardless of placement/movement)
-		if(!isLegalMovement(pieceType, from, to)){
+		if(!MoveValidator.isLegal(this, pieceType, from, to)){
 			throw new HantoException("Movement is illegal");
 		}
 	}
@@ -304,9 +283,9 @@ public abstract class BaseHanto implements HantoGame {
 		if(from == null){
 
 			if(piece.getColor() == HantoPlayerColor.BLUE){
-				removeFromInventory(piece.getType(), blueInventory);
+				removeFromInventory(piece, blueInventory);
 			} else {
-				removeFromInventory(piece.getType(), redInventory);
+				removeFromInventory(piece, redInventory);
 			}
 
 			board.placePiece(to, piece);
@@ -320,93 +299,21 @@ public abstract class BaseHanto implements HantoGame {
 
 	/**
 	 * Checks the result of the move
-	 * @return the result of the move
 	 */
-	protected MoveResult postMoveCheck() {
+	protected void postMoveCheck() {
 
-		MoveResult result;
-		
 		// Checks the result to return
 		if(isWin(redButterfly) && isWin(blueButterfly)){
-			result = MoveResult.DRAW;
+			lastMoveResult = MoveResult.DRAW;
 		} else if(isWin(redButterfly)){
-			result = MoveResult.BLUE_WINS;
+			lastMoveResult = MoveResult.BLUE_WINS;
 		} else if(isWin(blueButterfly)){
-			result = MoveResult.RED_WINS;
+			lastMoveResult = MoveResult.RED_WINS;
 		} else {
-			result = MoveResult.OK;
+			lastMoveResult = MoveResult.OK;
 		}
-		
-		lastMoveResult = result;
-
-		return result;
 	}
 
-	/**
-	 * Checks that the placement of this piece is legal
-	 * 
-	 * @param pieceType the type of the piece being checked (for Butterfly, turn 4)
-	 * @param from the starting coordinate
-	 * @param to the coordinate to place the piece
-	 * @return whether or not the placement of the piece is legal
-	 */
-	protected boolean isLegalMovement(HantoPieceType pieceType, 
-			HantoCoordinate from, HantoCoordinate to) {
-
-		boolean isLegal = true;
-
-		if (turnNumber == 4){
-			
-			// If the turn number is greater than or equal to 4,
-			// the butterfly must be placed
-			isLegal = isFourthTurnLegal(pieceType);
-			
-		} else if(board.numberOfPieces() < 2){
-			
-			// If the number of pieces is less than 2, it is
-			// the first turn. Works better with test games
-			isLegal = isFirstTurnLegal(from, to);
-			
-		} else {
-
-			// If from is null, the piece is being placed. Else, it is being moved
-			if(from == null){
-				isLegal = isLegal &&
-						board.isAnAdjacentSpaceOccupied(to) && 
-						!board.hasAdjacentOpposingPieces(to, currentPlayerTurn);
-			} else {
-				
-				// Check that the piece can slide and leaves
-				// a continuous configuration
-				isLegal = isLegal && areAdjacent(from, to) &&
-						SlideValidator.getInstance().canSlide(board, from, to) &&
-						ContinuityValidator.getInstance().isContinuous(board, from, to);
-			}
-		}
-
-		return isLegal;
-	}
-
-	/**
-	 * Checks whether the two coordinates are adjacent or not
-	 * @param from the initial coordinate
-	 * @param to the destination coordinate
-	 * @return whether the two coordinate are adjacent
-	 */
-	protected boolean areAdjacent(HantoCoordinate from, HantoCoordinate to){
-
-		List<HantoCoordinate> adjacents = new ArrayList<HantoCoordinate>();
-
-		adjacents.add(new HantoCoord(from.getX(), from.getY() - 1));
-		adjacents.add(new HantoCoord(from.getX(), from.getY() + 1));
-		adjacents.add(new HantoCoord(from.getX() - 1, from.getY()));
-		adjacents.add(new HantoCoord(from.getX() - 1, from.getY() + 1));
-		adjacents.add(new HantoCoord(from.getX() + 1, from.getY()));
-		adjacents.add(new HantoCoord(from.getX() + 1, from.getY() - 1));
-
-		return adjacents.contains(to);
-	}
-	
 	/**
 	 * Checks whether the given piece's coordinate is surrounded
 	 * If the blue butterfly coordinate is given, we are checking for
@@ -430,71 +337,17 @@ public abstract class BaseHanto implements HantoGame {
 
 		return isWin;
 	}
-	
+
 	/**
 	 * Removes a specified piece from the given inventory
 	 * 
-	 * @param pieceType the piece to remove from the inventory
+	 * @param piece the piece to remove from the inventory
 	 * @param inventory
 	 */
-	protected void removeFromInventory(HantoPieceType pieceType,
+	protected void removeFromInventory(HantoPiece piece,
 			PlayerInventory inventory) {
 
-		switch(pieceType){
-		case BUTTERFLY:
-			inventory.placeButterfly();
-			break;
-		case CRAB:
-			inventory.placeCrab();
-			break;
-		case HORSE:
-			inventory.placeHorse();
-			break;
-		case CRANE:
-			inventory.placeCrane();
-			break;
-		case DOVE:
-			inventory.placeDove();
-			break;
-		case SPARROW:
-			inventory.placeSparrow();
-			break;
-		}		
-	}
-
-	/**
-	 * Checks that the placement is legal according to the player's inventory
-	 * 
-	 * @param pieceType the type of piece to check the inventory for
-	 * @param inventory the inventory to check
-	 * @return whether or not the piece is in the inventory
-	 */
-	protected boolean isInInventory(HantoPieceType pieceType, PlayerInventory inventory) {
-
-		boolean isInInventory = false;
-
-		switch(pieceType){
-		case BUTTERFLY:
-			isInInventory = inventory.butterfliesInInventory();
-			break;
-		case CRAB:
-			isInInventory = inventory.crabsInInventory();
-			break;
-		case HORSE:
-			isInInventory = inventory.horsesInInventory();
-			break;
-		case CRANE:
-			isInInventory = inventory.cranesInInventory();
-			break;
-		case DOVE:
-			isInInventory = inventory.dovesInInventory();
-			break;
-		case SPARROW:
-			isInInventory = inventory.sparrowsInInventory();
-			break;
-		}
-
-		return isInInventory;
+		inventory.removeFromInventory(piece);
 	}
 
 	/**
@@ -513,5 +366,72 @@ public abstract class BaseHanto implements HantoGame {
 		if(currentPlayerTurn == movedFirst){
 			turnNumber++;
 		}
+	}
+
+	/**
+	 * Getters
+	 */
+
+	/**
+	 * @return the current turn number
+	 */
+	public int getTurnNumber() {
+		return turnNumber;
+	}
+
+	/**
+	 * @return which player moved first
+	 */
+	public HantoPlayerColor getMovedFirst() {
+		return movedFirst;
+	}
+
+	/**
+	 * @return the location of the blue butterfly
+	 */
+	public HantoCoordinate getBlueButterfly() {
+		return blueButterfly;
+	}
+
+	/**
+	 * @return the location of the red butterfly
+	 */
+	public HantoCoordinate getRedButterfly() {
+		return redButterfly;
+	}
+
+	/**
+	 * @return the board
+	 */
+	public Board getBoard() {
+		return board;
+	}
+
+	/**
+	 * @return the color of the player currently moving
+	 */
+	public HantoPlayerColor getCurrentPlayerTurn() {
+		return currentPlayerTurn;
+	}
+	
+	/**
+	 * @return the blue player's inventory
+	 */
+	public PlayerInventory getBlueInventory() {
+		return blueInventory;
+	}
+
+	/**
+	 * @return the red player's inventory
+	 */
+	public PlayerInventory getRedInventory() {
+		return redInventory;
+	}
+	
+	/**
+	 * @return the last move result of this game
+	 */
+	public MoveResult getLastMoveResult() {
+		return lastMoveResult;
 	}
 }

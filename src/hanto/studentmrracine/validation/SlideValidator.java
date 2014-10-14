@@ -8,9 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package hanto.studentmrracine.common;
+package hanto.studentmrracine.validation;
 
 import hanto.common.HantoCoordinate;
+import hanto.studentmrracine.common.Board;
+import hanto.studentmrracine.common.HantoCoord;
 
 /**
  * A class that validates a piece can slide from one location
@@ -21,21 +23,10 @@ import hanto.common.HantoCoordinate;
  */
 public class SlideValidator {
 
-	private static final SlideValidator INSTANCE = new SlideValidator();
-
 	/**
 	 * Private constructor for singleton
 	 */
-	private SlideValidator(){
-		//
-	}
-
-	/**
-	 * @return the instance of this class
-	 */
-	public static SlideValidator getInstance(){
-		return INSTANCE;
-	}
+	private SlideValidator(){}
 
 	/**
 	 * Checks whether the piece can slide from one location to another
@@ -46,7 +37,7 @@ public class SlideValidator {
 	 * @param to the destination coordinate
 	 * @return whether or not the board is connected
 	 */
-	public boolean canSlide(Board b, HantoCoordinate from, HantoCoordinate to){
+	public static boolean canSlide(Board b, HantoCoordinate from, HantoCoordinate to){
 
 		boolean canSlide = false;
 		
@@ -106,7 +97,7 @@ public class SlideValidator {
 	 * @param coord2 the second coordinate
 	 * @return whether both coordinates are occupied
 	 */
-	private boolean isBlocked(Board b, HantoCoord coord1, HantoCoord coord2) {
-		return b.isCoordinateOccupied(coord1) && b.isCoordinateOccupied(coord2);
+	private static boolean isBlocked(Board b, HantoCoord coord1, HantoCoord coord2) {
+		return b.isCoordOccupied(coord1) && b.isCoordOccupied(coord2);
 	}
 }

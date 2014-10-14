@@ -12,6 +12,7 @@ import hanto.common.HantoTestGameFactory;
 import hanto.common.MoveResult;
 import hanto.studentmrracine.HantoGameFactory;
 import hanto.studentmrracine.common.Butterfly;
+import hanto.studentmrracine.common.Crab;
 import hanto.studentmrracine.common.HantoCoord;
 import hanto.studentmrracine.common.HantoPieceFactory;
 import hanto.studentmrracine.common.PlayerInventory;
@@ -108,27 +109,18 @@ public class DeltaHantoTests {
 	@Test
 	public void testGammaInventoryHorse(){
 		PlayerInventory p = new DeltaInventory();
-		
-		assertFalse(p.horsesInInventory());
-		p.placeHorse();
 		assertFalse(p.horsesInInventory());
 	}
 
 	@Test
 	public void testGammaInventoryCrane(){
 		PlayerInventory p = new DeltaInventory();
-		
-		assertFalse(p.cranesInInventory());
-		p.placeCrane();
 		assertFalse(p.cranesInInventory());
 	}
 
 	@Test
 	public void testGammaInventoryDove(){
 		PlayerInventory p = new DeltaInventory();
-		
-		assertFalse(p.dovesInInventory());
-		p.placeDove();
 		assertFalse(p.dovesInInventory());
 	}
 
@@ -178,29 +170,29 @@ public class DeltaHantoTests {
 		PlayerInventory i = new DeltaInventory();
 		
 		assertTrue(i.butterfliesInInventory());
-		i.placeButterfly();
+		i.removeFromInventory(new Butterfly(HantoPlayerColor.BLUE));
 		assertFalse(i.butterfliesInInventory());
-		i.placeButterfly();
+		i.removeFromInventory(new Butterfly(HantoPlayerColor.BLUE));
 		assertFalse(i.butterfliesInInventory());
 		
 		assertTrue(i.sparrowsInInventory());
-		i.placeSparrow();
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.BLUE));
 		assertTrue(i.sparrowsInInventory());
-		i.placeSparrow();
-		i.placeSparrow();
-		i.placeSparrow();
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.BLUE));
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.BLUE));
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.BLUE));
 		assertFalse(i.sparrowsInInventory());
-		i.placeSparrow();
+		i.removeFromInventory(new Sparrow(HantoPlayerColor.BLUE));
 		assertFalse(i.sparrowsInInventory());
 		
 		assertTrue(i.crabsInInventory());
-		i.placeCrab();
+		i.removeFromInventory(new Crab(HantoPlayerColor.BLUE));
 		assertTrue(i.crabsInInventory());
-		i.placeCrab();
-		i.placeCrab();
-		i.placeCrab();
+		i.removeFromInventory(new Crab(HantoPlayerColor.BLUE));
+		i.removeFromInventory(new Crab(HantoPlayerColor.BLUE));
+		i.removeFromInventory(new Crab(HantoPlayerColor.BLUE));
 		assertFalse(i.crabsInInventory());
-		i.placeCrab();
+		i.removeFromInventory(new Crab(HantoPlayerColor.BLUE));
 		assertFalse(i.crabsInInventory());
 	}
 	
@@ -268,5 +260,11 @@ public class DeltaHantoTests {
 
 		assertEquals(MoveResult.OK, 
 				g.makeMove(HantoPieceType.BUTTERFLY, null, new HantoCoord(1, -2)));
+	}
+	
+	@Test
+	public void testInventoryPiecesLeft(){
+		PlayerInventory p = new DeltaInventory();
+		assertNull(p.piecesLeft());
 	}
 }

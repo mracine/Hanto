@@ -28,14 +28,6 @@ public class Crab extends Piece implements HantoPiece {
 	public Crab(HantoPlayerColor pieceColor){
 		super(pieceColor);
 	}
-	
-	/**
-	 * @return the color of this piece
-	 */
-	@Override
-	public HantoPlayerColor getColor() {
-		return super.getColor();
-	}
 
 	/**
 	 * @return the type of this piece, a CRAB

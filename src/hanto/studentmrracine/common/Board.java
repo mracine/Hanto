@@ -35,6 +35,11 @@ public interface Board {
 	int numberOfPieces();
 	
 	/**
+	 * @return a list of coordinates occupied on the board
+	 */
+	List<HantoCoordinate> getAllOccupiedCoordinates();
+	
+	/**
 	 * Checks whether the specified coordinate is occupied
 	 * or not.
 	 * 
@@ -42,7 +47,7 @@ public interface Board {
 	 * @param coordY the y param of the coordinate
 	 * @return whether the coordinate is occupied
 	 */
-	boolean isCoordinateOccupied(int coordX, int coordY);
+	boolean isCoordOccupied(int coordX, int coordY);
 	
 	/**
 	 * Checks whether the specified coordinate is occupied
@@ -51,7 +56,7 @@ public interface Board {
 	 * @param coord the coordinate to look for
 	 * @return whether the coordinate is occupied
 	 */
-	boolean isCoordinateOccupied(HantoCoordinate coord);
+	boolean isCoordOccupied(HantoCoordinate coord);
 	
 	/**
 	 * Places a piece on the board
@@ -82,7 +87,7 @@ public interface Board {
 	 * @param to the destination coordinate
 	 * @return whether or not an adjacent space is occupied or not
 	 */
-	boolean isAnAdjacentSpaceOccupied(HantoCoordinate to);
+	boolean isAdjacentSpaceOccupied(HantoCoordinate to);
 	
 	/**
 	 * Checks whether any adjacent spaces have opposing colors
@@ -90,7 +95,7 @@ public interface Board {
 	 * @param currentPlayerTurn the color of the current player's turn
 	 * @return whether the adjacent spaces has opposing colors
 	 */
-	boolean hasAdjacentOpposingPieces(HantoCoordinate to, 
+	boolean isAdjacentOpposingPieces(HantoCoordinate to, 
 			HantoPlayerColor currentPlayerTurn);
 	
 	/**
@@ -103,12 +108,20 @@ public interface Board {
 	boolean isSurrounded(HantoCoordinate coord);
 	
 	/**
-	 * Returns an array of neighbors to a certain space
+	 * Returns a list of coordinates occupied by a certain player
+	 * 
+	 * @param player the color of the player
+	 * @return the list of coordinates occupied by that player
+	 */
+	List<HantoCoordinate> getPlayerOccupiedCoordinates(HantoPlayerColor player);
+	
+	/**
+	 * Returns an array of occupied neighbors to a certain space
 	 * 
 	 * @param coord the coordinate to retrieve neighbors from
 	 * @return the array of neighbors
 	 */
-	List<HantoCoordinate> getNeighbors(HantoCoordinate coord);
+	List<HantoCoordinate> getOccupiedNeighbors(HantoCoordinate coord);
 	
 	/**
 	 * Clears all pieces from the board

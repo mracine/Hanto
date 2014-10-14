@@ -29,13 +29,6 @@ public class Butterfly extends Piece implements HantoPiece {
 	public Butterfly(HantoPlayerColor pieceColor){
 		super(pieceColor);
 	}
-	
-	/**
-	 * @return the color of this butterfly
-	 */
-	public HantoPlayerColor getColor() {
-		return super.getColor();
-	}
 
 	/**
 	 * @return the type of this piece, a BUTTERFLY

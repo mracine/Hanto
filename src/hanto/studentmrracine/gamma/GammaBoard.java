@@ -15,11 +15,14 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPlayerColor;
 import hanto.studentmrracine.common.Board;
 import hanto.studentmrracine.common.HantoCoord;
+import hanto.studentmrracine.common.HantoUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * The implementation of a board for Gamma Hanto. Note that this implementation
@@ -38,28 +41,45 @@ public class GammaBoard implements Board {
 			new HashMap<HantoCoordinate, HantoPiece>();
 
 	/**
+	 * Default constructor 
+	 */
+	public GammaBoard(){}
+	
+	/**
+	 * Copy constructor for board
+	 * @param b the board to copy
+	 */
+	public GammaBoard(Board b){
+		
+		for(HantoCoordinate c : b.getAllOccupiedCoordinates()){
+			
+			b.placePiece(c, b.getPieceAt(c));
+		}
+	}
+	
+	/**
 	 * @return the number of pieces on the board
 	 */
 	public int numberOfPieces() {
 		return board.size();
 	}
-	
+
 	/**
 	 * @param coordX the x coordinate
 	 * @param coordY the y coordinate
 	 * @return whether the space is occupied or not
 	 */
-	public boolean isCoordinateOccupied(int coordX, int coordY) {
+	public boolean isCoordOccupied(int coordX, int coordY) {
 
 		HantoCoordinate c = new HantoCoord(coordX, coordY);
-		return isCoordinateOccupied(c);
+		return isCoordOccupied(c);
 	}
 
 	/**
 	 * @param coord the HantoCoordinate
 	 * @return whether the space is occupied or not
 	 */
-	public boolean isCoordinateOccupied(HantoCoordinate coord) {
+	public boolean isCoordOccupied(HantoCoordinate coord) {
 
 		boolean coordinateOccupied;
 
@@ -79,7 +99,7 @@ public class GammaBoard implements Board {
 	public void placePiece(HantoCoordinate newCoord, HantoPiece newPiece) {
 		board.put(new HantoCoord(newCoord), newPiece);
 	}
-	
+
 	/**
 	 * Moves a piece on the board. The HantoGame class should check
 	 * that the move is valid
@@ -88,7 +108,7 @@ public class GammaBoard implements Board {
 	 * @param to the destination coordinate
 	 */
 	public void movePiece(HantoCoordinate from, HantoCoordinate to) {
-		
+
 		HantoPiece toMove = board.get(from);
 
 		board.remove(from);
@@ -121,22 +141,9 @@ public class GammaBoard implements Board {
 	 * @param coord the destination coordinate
 	 * @return whether or not an adjacent space is occupied or not
 	 */
-	public boolean isAnAdjacentSpaceOccupied(HantoCoordinate coord) {
+	public boolean isAdjacentSpaceOccupied(HantoCoordinate coord) {
 
-		boolean isOccupied;
-
-		if((isCoordinateOccupied(coord.getX(), coord.getY() - 1)) || 
-				(isCoordinateOccupied(coord.getX(), coord.getY() + 1)) || 
-				(isCoordinateOccupied(coord.getX() - 1, coord.getY())) || 
-				(isCoordinateOccupied(coord.getX() - 1, coord.getY() + 1)) || 
-				(isCoordinateOccupied(coord.getX() + 1, coord.getY())) || 
-				(isCoordinateOccupied(coord.getX() + 1, coord.getY() - 1))){
-			isOccupied = true;
-		} else {
-			isOccupied = false;
-		}
-
-		return isOccupied;
+		return getOccupiedNeighbors(coord).size() > 0;
 	}
 
 	/**
@@ -144,20 +151,17 @@ public class GammaBoard implements Board {
 	 * @param coord the space to check
 	 * @return whether the adjacent spaces has opposing colors
 	 */
-	public boolean hasAdjacentOpposingPieces(HantoCoordinate coord, 
+	public boolean isAdjacentOpposingPieces(HantoCoordinate coord, 
 			HantoPlayerColor currentPlayerTurn) {
 
-		boolean hasOpposingAdjacentColors;
-
-		if(isSpaceOpposingColor(coord.getX(), coord.getY() - 1, currentPlayerTurn) ||
-				isSpaceOpposingColor(coord.getX(), coord.getY() + 1, currentPlayerTurn) || 
-				isSpaceOpposingColor(coord.getX() - 1, coord.getY(), currentPlayerTurn) || 
-				isSpaceOpposingColor(coord.getX() - 1, coord.getY() + 1, currentPlayerTurn) || 
-				isSpaceOpposingColor(coord.getX() + 1, coord.getY(), currentPlayerTurn) || 
-				isSpaceOpposingColor(coord.getX() + 1, coord.getY() - 1, currentPlayerTurn)){
-			hasOpposingAdjacentColors = true;
-		} else {
-			hasOpposingAdjacentColors = false;
+		boolean hasOpposingAdjacentColors = false;
+		
+		for(HantoCoordinate c : getOccupiedNeighbors(coord)){
+			
+			if(isSpaceOpposingColor(c, currentPlayerTurn)){
+				hasOpposingAdjacentColors = true;
+				break;
+			}
 		}
 
 		return hasOpposingAdjacentColors;
@@ -172,14 +176,11 @@ public class GammaBoard implements Board {
 	 * @param color the color of the current player
 	 * @return
 	 */
-	private boolean isSpaceOpposingColor(int x, int y, HantoPlayerColor color){
+	private boolean isSpaceOpposingColor(HantoCoordinate coord, HantoPlayerColor color){
 
-		HantoCoord to = new HantoCoord(x, y);
 		boolean spaceIsOpposingColor;
 
-		if(!isCoordinateOccupied(to)){
-			spaceIsOpposingColor = false;
-		} else if(board.get(to).getColor() != color){
+		if(board.get(coord).getColor() != color){
 			spaceIsOpposingColor = true;
 		} else {
 			spaceIsOpposingColor = false;
@@ -197,20 +198,7 @@ public class GammaBoard implements Board {
 	 */
 	public boolean isSurrounded(HantoCoordinate coord) {
 
-		boolean isSurrounded;
-
-		if(isCoordinateOccupied(coord.getX(), coord.getY() - 1) && 
-				isCoordinateOccupied(coord.getX(), coord.getY() + 1) && 
-				isCoordinateOccupied(coord.getX() - 1, coord.getY()) && 
-				isCoordinateOccupied(coord.getX() - 1, coord.getY() + 1) && 
-				isCoordinateOccupied(coord.getX() + 1, coord.getY()) && 
-				isCoordinateOccupied(coord.getX() + 1, coord.getY() - 1)){
-			isSurrounded = true;
-		} else {
-			isSurrounded = false;
-		}
-
-		return isSurrounded;
+		return getOccupiedNeighbors(coord).size() == 6;
 	}
 
 	/**
@@ -219,32 +207,53 @@ public class GammaBoard implements Board {
 	 * @param coord the coordinate to look for neighbors
 	 * @return an array of neighbors to the coordinate
 	 */
-	public List<HantoCoordinate> getNeighbors(HantoCoordinate coord) {
+	public List<HantoCoordinate> getOccupiedNeighbors(HantoCoordinate coord) {
+
+		List<HantoCoordinate> occupiedNeighbors = new ArrayList<HantoCoordinate>();
 		
-		List<HantoCoordinate> neighbors = new ArrayList<HantoCoordinate>();
+		for(HantoCoordinate c : HantoUtil.getAllNeighbors(coord)){
+			if(isCoordOccupied(c)){
+				occupiedNeighbors.add(c);
+			}
+		}
+
+		return occupiedNeighbors;
+	}
+	
+	/**
+	 * Returns a list of coordinates occupied by a certain player
+	 */
+	public List<HantoCoordinate> getPlayerOccupiedCoordinates(
+			HantoPlayerColor player) {
 		
-		if(isCoordinateOccupied(coord.getX(), coord.getY() - 1)){
-			neighbors.add(new HantoCoord(coord.getX(), coord.getY() - 1));
-		}
-		if(isCoordinateOccupied(coord.getX(), coord.getY() + 1)){
-			neighbors.add(new HantoCoord(coord.getX(), coord.getY() + 1));
-		}
-		if(isCoordinateOccupied(coord.getX() - 1, coord.getY())){
-			neighbors.add(new HantoCoord(coord.getX() - 1, coord.getY()));
-		}
-		if(isCoordinateOccupied(coord.getX() - 1, coord.getY() + 1)){
-			neighbors.add(new HantoCoord(coord.getX() - 1, coord.getY() + 1));
-		}
-		if(isCoordinateOccupied(coord.getX() + 1, coord.getY())){
-			neighbors.add(new HantoCoord(coord.getX() + 1, coord.getY()));
-		}
-		if(isCoordinateOccupied(coord.getX() + 1, coord.getY() - 1)){
-			neighbors.add(new HantoCoord(coord.getX() + 1, coord.getY() - 1));
-		}		
+		List<HantoCoordinate> playerOccupiedCoords = new ArrayList<HantoCoordinate>();
 		
-		return neighbors;
+		for(HantoCoordinate c : getAllOccupiedCoordinates()){
+			
+			if(getPieceAt(c).getColor() == player){
+				playerOccupiedCoords.add(c);
+			}
+		}
+		
+		return playerOccupiedCoords;
 	}
 
+	/**
+	 * Returns a list of coordinates occupied on the board
+	 */
+	public List<HantoCoordinate> getAllOccupiedCoordinates() {
+
+		List<HantoCoordinate> allCoordinates = new ArrayList<HantoCoordinate>();
+		Iterator<Entry<HantoCoordinate, HantoPiece>> it = board.entrySet().iterator();
+
+		while(it.hasNext()){
+			Map.Entry<HantoCoordinate, HantoPiece> pairs = it.next();
+			allCoordinates.add(pairs.getKey());
+		}
+
+		return allCoordinates;
+	}
+	
 	/**
 	 * Clears all pieces from the board
 	 */
