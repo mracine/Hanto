@@ -144,30 +144,4 @@ public class HantoUtil {
 
 		return HantoUtil.getAllNeighbors(from).contains(to);
 	}
-
-	/**
-	 * Checks whether the given coordinate is adjacent to an opposing butterfly
-	 * 
-	 * @param b the game being played
-	 * @param myColor the current player's color
-	 * @param c the coordinate to check
-	 * @return whether the space is adjacent or not
-	 */
-	public static boolean isAdjacentOpposingButterfly(BaseHanto b, 
-			HantoPlayerColor myColor, HantoCoordinate coord) {
-		
-		boolean isAdjacent = false;
-		
-		List<HantoCoordinate> neighbors = b.getBoard().getOccupiedNeighbors(coord);
-		
-		for(HantoCoordinate c : neighbors){
-			
-			if(b.getBoard().getPieceAt(c).getType() == HantoPieceType.BUTTERFLY && 
-					myColor != b.getBoard().getPieceAt(c).getColor()){
-				isAdjacent = true;
-			}
-		}
-		
-		return isAdjacent;
-	}
 }

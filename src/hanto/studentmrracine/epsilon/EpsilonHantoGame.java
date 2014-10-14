@@ -39,14 +39,6 @@ public class EpsilonHantoGame extends BaseHanto implements HantoGame {
 		redInventory = new EpsilonInventory(HantoPlayerColor.RED);
 	}
 	
-	/**
-	 * Copy constructor for an EpsilonHantoGame
-	 * @param g the game
-	 */
-	public EpsilonHantoGame(BaseHanto g){
-		super(g);
-	}
-	
 	@Override
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {

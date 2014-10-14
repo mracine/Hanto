@@ -26,6 +26,7 @@ import hanto.studentmrracine.validation.JumpValidator;
 import hanto.studentmrracine.validation.MovesLeftValidator;
 import hanto.studentmrracine.validation.PathValidator;
 import hanto.tournament.HantoGamePlayer;
+import hanto.tournament.HantoMoveRecord;
 
 import org.junit.Test;
 
@@ -196,10 +197,32 @@ public class EpsilonHantoTests {
 	}
 	
 	@Test
-	public void testHantoPlayer(){
+	public void testHantoPlayer() throws HantoException {
+				
+		HantoGamePlayer p = new HantoPlayer();
+		HantoGamePlayer p2 = new HantoPlayer();
+		p.startGame(HantoGameID.EPSILON_HANTO, HantoPlayerColor.BLUE, true);
+		p2.startGame(HantoGameID.EPSILON_HANTO, HantoPlayerColor.RED, false);
+		
+		// Places piece at (0, 0)
+		HantoMoveRecord mr = p.makeMove(null);
+		HantoMoveRecord mr2 = p2.makeMove(mr);
+		
+		// Test a butterfly move on second move
+		mr = p.makeMove(mr2);
+		mr2 = p2.makeMove(mr);
+		mr = p.makeMove(mr2);
+		mr2 = p2.makeMove(mr);
+		mr = p.makeMove(mr2);
+		mr2 = p2.makeMove(mr);
+	}
+	
+	@Test
+	public void testPlayerRedFirst(){
 		
 		HantoGamePlayer p = new HantoPlayer();
-		p.startGame(HantoGameID.EPSILON_HANTO, HantoPlayerColor.BLUE, true);
-		p.makeMove(null);
+		HantoGamePlayer p2 = new HantoPlayer();
+		p.startGame(HantoGameID.EPSILON_HANTO, HantoPlayerColor.BLUE, false);
+		p2.startGame(HantoGameID.EPSILON_HANTO, HantoPlayerColor.RED, true);
 	}
 }

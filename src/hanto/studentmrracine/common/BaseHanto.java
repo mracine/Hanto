@@ -87,23 +87,6 @@ public abstract class BaseHanto implements HantoGame {
 		movedFirst = movesFirst;
 		currentPlayerTurn = movedFirst;
 	}
-	
-	/**
-	 * Copy constructor for a HantoGame
-	 * 
-	 * @param g the Hanto game to copy
-	 */
-	protected BaseHanto(BaseHanto g){
-		turnNumber = g.getTurnNumber();
-		currentPlayerTurn = g.getCurrentPlayerTurn();
-		movedFirst = g.getMovedFirst();
-		blueButterfly = g.getBlueButterfly();
-		redButterfly = g.getRedButterfly();
-		blueInventory = g.getBlueInventory();
-		redInventory = g.getRedInventory();
-		lastMoveResult = g.getLastMoveResult();
-		board = g.getBoard();
-	}
 
 	/**
 	 * Makes a move and returns the result of that move

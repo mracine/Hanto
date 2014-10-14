@@ -11,7 +11,6 @@
 package hanto.studentmrracine.validation;
 
 import hanto.common.HantoCoordinate;
-import hanto.common.HantoException;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
@@ -59,7 +58,8 @@ public class MoveValidator {
 			if(game.getCurrentPlayerTurn() == HantoPlayerColor.BLUE && 
 					!isInInventory(pieceType, game.getBlueInventory())){
 				preMoveOk = false;
-			} else if (!isInInventory(pieceType, game.getRedInventory())){
+			} else if (game.getCurrentPlayerTurn() == HantoPlayerColor.RED &&
+					!isInInventory(pieceType, game.getRedInventory())){
 				preMoveOk = false;
 			}
 		} else {

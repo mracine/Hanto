@@ -19,8 +19,6 @@ import hanto.common.HantoPlayerColor;
 import hanto.studentmrracine.HantoGameFactory;
 import hanto.studentmrracine.common.BaseHanto;
 import hanto.studentmrracine.common.HantoUtil;
-import hanto.studentmrracine.common.PlayerInventory;
-import hanto.studentmrracine.epsilon.EpsilonHantoGame;
 import hanto.tournament.HantoGamePlayer;
 import hanto.tournament.HantoMoveRecord;
 
@@ -33,7 +31,6 @@ public class HantoPlayer implements HantoGamePlayer {
 
 	private BaseHanto game;
 	private HantoPlayerColor myColor;
-	private PlayerInventory myInventory;
 
 	@Override
 	public void startGame(HantoGameID version, HantoPlayerColor myColor,
@@ -50,7 +47,6 @@ public class HantoPlayer implements HantoGamePlayer {
 				game = (BaseHanto)HantoGameFactory.getInstance().makeHantoGame(version, 
 						HantoPlayerColor.RED);
 			}
-			myInventory = game.getBlueInventory();
 			break;
 		case RED:
 			if(doIMoveFirst){
@@ -60,7 +56,6 @@ public class HantoPlayer implements HantoGamePlayer {
 				game = (BaseHanto)HantoGameFactory.getInstance().makeHantoGame(version, 
 						HantoPlayerColor.BLUE);
 			}
-			myInventory = game.getRedInventory();
 			break;
 		}
 	}
@@ -83,12 +78,19 @@ public class HantoPlayer implements HantoGamePlayer {
 			}
 		}
 
+		List<HantoMoveRecord> movesLeft;
+		
 		// Check the moves I have left
-		List<HantoMoveRecord> movesLeft = HantoUtil.movesLeft(game, myColor, myInventory);
+		if(myColor == HantoPlayerColor.BLUE){
+			movesLeft = HantoUtil.movesLeft(game, 
+					myColor, game.getBlueInventory());
+		} else {
+			movesLeft = HantoUtil.movesLeft(game, myColor, 
+					game.getRedInventory());
+		}
 
 		// Two different methods, one for dumb AI, one for smart AI
-		//myMove = dumbAI(movesLeft);
-		myMove = smartAI(movesLeft);
+		myMove = dumbAI(movesLeft);
 
 		// Make my move
 		try {
@@ -112,23 +114,8 @@ public class HantoPlayer implements HantoGamePlayer {
 	private HantoMoveRecord dumbAI(List<HantoMoveRecord> movesLeft) {
 
 		Random rand = new Random();
-		int randomNum = rand.nextInt(movesLeft.size() - 1);
+		int randomNum = rand.nextInt(movesLeft.size());
 
 		return movesLeft.get(randomNum);
-	}
-
-	/**
-	 * Will attempt to do a MiniMax tree to make an intelligent move
-	 * @param movesLeft the moves I have left
-	 * @return the move I want to make
-	 */
-	private HantoMoveRecord smartAI(List<HantoMoveRecord> movesLeft) {
-
-		// IMPORTANT: Make a copy of the game before messing with it
-		BaseHanto testGame = new EpsilonHantoGame(game);
-
-		// Initial call to minimax (for maximizing player)
-		// NOTE: nodes are board states
-		return MinimaxStrategy.minimaxStrategy(testGame, 3, myColor);
 	}
 }
