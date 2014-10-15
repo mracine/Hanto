@@ -31,6 +31,15 @@ public class MoveValidator {
 	 */
 	private MoveValidator(){}
 	
+	/**
+	 * Checks whether a move is legal
+	 * 
+	 * @param game the game being played
+	 * @param pieceType the piece type moving
+	 * @param from the starting coordinate
+	 * @param to the destination coordinate
+	 * @return whether the move is legal or not
+	 */
 	public static boolean isLegal(BaseHanto game, HantoPieceType pieceType,
 			HantoCoordinate from, HantoCoordinate to){
 		

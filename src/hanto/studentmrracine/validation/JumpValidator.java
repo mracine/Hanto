@@ -81,7 +81,7 @@ public class JumpValidator {
 			div = ((double)diffX)/((double)diffY);
 		}
 
-		if(deltaX == 0 || deltaY == 0 || div == -1.0){
+		if(deltaX == 0 || deltaY == 0 || Double.compare(div, -1.0) == 0){
 			isInStraightLine = true;
 		} else {
 			isInStraightLine = false;
